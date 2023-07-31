@@ -16,4 +16,6 @@ public class Buffer {
 
         //mejoras
         //mejoras2
+    //8888888
+    //6556411 nico
 }
