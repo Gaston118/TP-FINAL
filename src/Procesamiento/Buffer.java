@@ -15,5 +15,5 @@ public class Buffer {
         private ArrayList<Imagen> BufferIddle;
 
         //mejoras
-
+        //mejoras2
 }
