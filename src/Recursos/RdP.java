@@ -1,15 +1,81 @@
 package Recursos;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static Recursos.Utilidades.*;
+
 public class RdP {
+    private static Integer [][] MtzIncidencia;
+    private static Integer [] Marcado;
+    private static Transicion Tsensibilizada;
 
-    /*
-     OPCION 1: MODELAR QUE T0 NO EXISTE Y QUE LOS HILOS 1 Y 2 DIRECTAMENTE CREAN LA IMAGEN, COMO SI LA ESTUVIERAN
-     SACANDO DE P0 (TOTAL LOS IT LARGAN DESDE T1 O T2)
+    public RdP(){
+        MtzIncidencia = MATRIZ_INCIDENCIA;
+        Marcado = MARCADO_INICIAL;
+        List<Integer> TsensInicial = generarTransicion();
 
-     OPCION 2: MODELAR QUE UN HILO GENERA IMAGENES AL AZAR A UNA VELOCIDAD NO MUY DESCOMUNAL Y LA PONE EN UN
-     BUFFER IDDLE, ESTO MODELARLO PARA QUE NO SE TENGA EN CUENTA EN LOS IT, Y QUE T1 Y T2 SAQUE LAS IMAGENES DEL
-     BUFFER IDDLE
-     */
+    }
+
+    public List<Integer> generarTransicion(){
+        List<Integer> NuevaT = new ArrayList<>();
+        for(int i=0; i<CANTIDAD_TRANSICIONES; i++){
+            boolean sensibilizada = true;
+            for (int j=0; j<CANTIDAD_PLAZAS; j++){
+                if (MtzIncidencia[j][i] < 0 && (Marcado[j] < Math.abs(MtzIncidencia[j][i]))){
+                    sensibilizada=false;
+                    break;
+                }
+            }
+            if (sensibilizada) {
+                NuevaT.add(i);
+            }
+        }
+        return NuevaT;
+    }
+
+  public Boolean Disparar(Integer disparo){
+        if(Tsensibilizada.esTransicionSensibilizada(disparo, MtzIncidencia, Marcado)){
+            actualizarMarcado(disparo);
+            actualizarT();
+            return true;
+        }
+        actualizarT();
+      return false;
+  }
+
+  public void actualizarMarcado(Integer disparo){
+        Integer[] disparar = new Integer[CANTIDAD_TRANSICIONES];
+        Arrays.fill(disparar, 0);
+        disparar[disparo]=1;
+        try{
+            Marcado = sumarVectores(Marcado, productoMatricial(MtzIncidencia,disparar));
+        } catch (Exception e) {
+            throw new RuntimeException(e + "Error de disparo");
+        }
+  }
+
+  public void actualizarT(){
+        Integer[] nuevaT = generarTransicion().toArray(new Integer[0]);
+        setSens(nuevaT);
+  }
+
+  public void setSens(Integer[] nuevaTS){
+        Tsensibilizada.setSensibilizado(nuevaTS);
+  }
+
+  public Integer[] getSens(){
+      return Tsensibilizada.getSensibilizado();
+  }
+
+
+
+
+
+
+
 
 
 }
+
