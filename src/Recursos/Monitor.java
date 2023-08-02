@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.concurrent.*;
 import static Recursos.Utilidades.*;
 
+//El señalizado de las condiciones se hizo con la política de “Signal and Exit”
 
 public class Monitor {
     private static final RdP rdp = new RdP();
@@ -80,14 +81,20 @@ public class Monitor {
     para adquirir el semáforo. Devuelve false si no hay hilos en espera y, por lo tanto, el semáforo está
     disponible para ser adquirido sin poner ningún hilo en espera.
      */
-    public boolean LiberarCola(){
-        Integer [] Tposibles = transiciones();
-        Random random = null; //USAMOS UN RANDOM POR QUE NO ESTA LA POLITICA.
-        int indiceAleatorio = random.nextInt(Tposibles.length);
-        if(ColaCondition[indiceAleatorio].hasQueuedThreads()){
-            ColaCondition[indiceAleatorio].release();
-            return true;
+    /*La política de señalización "signal and exit" implica que, en lugar de liberar (disparar) aleatoriamente
+    una transición sensibilizada, se liberará la primera transición que esté sensibilizada y tenga hilos esperando
+    en su cola de condición.
+     */
+    public boolean LiberarCola() {
+        Integer[] Tposibles = transiciones();
+
+        for (int i = 0; i < Tposibles.length; i++) {
+            if (Tposibles[i] == 1 && ColaCondition[i].hasQueuedThreads()) {
+                ColaCondition[i].release();
+                return true;
+            }
         }
+
         return false;
     }
 
