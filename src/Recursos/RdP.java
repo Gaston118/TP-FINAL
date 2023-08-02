@@ -18,6 +18,7 @@ public class RdP {
 
     }
 
+    /* ACA PODRIA HABER UN POSIBLE ERROR - TENER EN CUENTA */
     public List<Integer> generarTransicion(){
         List<Integer> NuevaT = new ArrayList<>();
         for(int i=0; i<CANTIDAD_TRANSICIONES; i++){
@@ -56,6 +57,7 @@ public class RdP {
         }
   }
 
+  //Actualizar Transiciones
   public void actualizarT(){
         Integer[] nuevaT = generarTransicion().toArray(new Integer[0]);
         setSens(nuevaT);

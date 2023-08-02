@@ -9,7 +9,7 @@ public class Transicion {
     public static Boolean[] estaEsperando;
     public Transicion(Integer[] transicion){
         sensibilizada=transicion;
-        estaEsperando = new Boolean[CANTIDAD_TRANSICIONES];
+        estaEsperando = new Boolean[CANTIDAD_TRANSICIONES]; //ESTO SE UTILIZA PARA LA SEMANTICA TEMPORAL
     }
 
     public void setSensibilizado(Integer[] nuevaTS) {
