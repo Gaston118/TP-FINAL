@@ -7,9 +7,11 @@ import java.util.List;
 import static Recursos.Utilidades.*;
 
 public class RdP {
+    private int contador=0;
     private static Integer [][] MtzIncidencia;
     private static Integer [] Marcado;
     private static Transicion Tsensibilizada;
+    private Integer disparada;
 
     public RdP(){
         MtzIncidencia = MATRIZ_INCIDENCIA;
@@ -40,13 +42,18 @@ public class RdP {
         if(Tsensibilizada.esTransicionSensibilizada(disparo, MtzIncidencia, Marcado)){
             actualizarMarcado(disparo);
             actualizarT();
+            if(disparo==14){
+                contador++;
+                System.out.println("Se completo un invariante.");
+            }
+            disparada=disparo;
             return true;
         }
         actualizarT();
       return false;
   }
 
-  public void actualizarMarcado(Integer disparo){
+  private void actualizarMarcado(Integer disparo){
         Integer[] disparar = new Integer[CANTIDAD_TRANSICIONES];
         Arrays.fill(disparar, 0); //setea todos en 0
         disparar[disparo]=1;
@@ -90,8 +97,17 @@ public class RdP {
         return (ip1 && ip2 && ip3 && ip4 && ip5 && ip6 && ip7 && ip8);
   }
 
+  public boolean Fin(){
+        if(contador==200){
+            System.out.println("Se ejecutaron 200 invariantes.");
+            return true;
+        }
+        return false;
+  }
 
-
+  public Integer seDisparo(){
+        return disparada;
+  }
 
 
 
