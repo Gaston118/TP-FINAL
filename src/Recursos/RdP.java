@@ -48,7 +48,7 @@ public class RdP {
 
   public void actualizarMarcado(Integer disparo){
         Integer[] disparar = new Integer[CANTIDAD_TRANSICIONES];
-        Arrays.fill(disparar, 0);
+        Arrays.fill(disparar, 0); //setea todos en 0
         disparar[disparo]=1;
         try{
             Marcado = sumarVectores(Marcado, productoMatricial(MtzIncidencia,disparar));
@@ -61,6 +61,11 @@ public class RdP {
   public void actualizarT(){
         Integer[] nuevaT = generarTransicion().toArray(new Integer[0]);
         setSens(nuevaT);
+
+        if(!cumpleIP()){
+            System.out.println("Se ha violado los invariantes de plaza");
+            System.exit(1);
+        }
   }
 
   public void setSens(Integer[] nuevaTS){
@@ -71,7 +76,19 @@ public class RdP {
       return Tsensibilizada.getSensibilizado();
   }
 
+  private static boolean cumpleIP(){
+        boolean ip1,ip2,ip3,ip4,ip5,ip6,ip7,ip8;
+        ip1= (Marcado[0]+Marcado[1]==1);
+        ip2= (Marcado[3]+Marcado[4]==1);
+        ip3= (Marcado[12]+Marcado[13]+Marcado[14]==1);
+        ip4= (Marcado[6]+Marcado[7]==1);
+        ip5= (Marcado[9]+Marcado[10]==1);
+        ip6= (Marcado[8]+Marcado[10]+Marcado[7]==2);
+        ip7= (Marcado[17]+Marcado[16]==1);
+        ip8= (Marcado[3]+Marcado[2]+Marcado[16]+Marcado[1]==3);
 
+        return (ip1 && ip2 && ip3 && ip4 && ip5 && ip6 && ip7 && ip8);
+  }
 
 
 
