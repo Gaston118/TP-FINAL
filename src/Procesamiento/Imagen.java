@@ -21,6 +21,7 @@ public abstract class Imagen {
             for(Integer t : transiciones)
             {
                 monitor.disparar(t);
+                System.out.println("Se disparo T"+t);
             }
         }
     }

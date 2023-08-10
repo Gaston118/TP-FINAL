@@ -9,6 +9,10 @@ public class Crear extends Imagen implements Runnable{
     @Override
     public void run() {
         procesar();
-        System.out.println("CREANDO");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -45,8 +45,19 @@ public class Monitor {
     }
 
     public void liberarMutex() {
-        Mutex.release();
-        System.out.println(Thread.currentThread().getName() + " libero el mutex");
+        boolean releasedMutex = false;
+        if(!LiberarCola()){
+            if (Mutex.availablePermits() != 0) {
+                System.out.println("Error en el mutex");
+                System.exit(1); //Si el semaforo deja de ser binario muere aca
+            }
+            Mutex.release();
+            releasedMutex = true;
+            System.out.println(Thread.currentThread().getName() + " libero el mutex");
+        }
+        if (!releasedMutex) {
+            Mutex.release();
+        }
     }
 
     //DISPARA Y POR LO TANTO EL ESTADO DE LA RED CAMBIA.
@@ -60,6 +71,7 @@ public class Monitor {
             } catch (Exception e) {
                 throw new RuntimeException(e + " Error en disparar de monitor");
             }
+            disparar(transicion);
         }
     }
 
@@ -68,7 +80,7 @@ public class Monitor {
     public Integer[] transiciones(){
         Integer[] t = new Integer[CANTIDAD_TRANSICIONES];
         for(int i=0; i<CANTIDAD_TRANSICIONES; i++){
-            if((ColaCondition[i].getQueueLength()>0) && (rdp.getSens()[i]==1)){
+            if((ColaCondition[i].getQueueLength()!=0) && (rdp.getSens()[i]==1)){
                 t[i]=1;
             }else{
                 t[i]=0;
@@ -91,9 +103,11 @@ public class Monitor {
         for (int i = 0; i < Tposibles.length; i++) {
             if (Tposibles[i] == 1 && ColaCondition[i].hasQueuedThreads()) {
                 ColaCondition[i].release();
+                //System.out.println("Liberar cola = true");
                 return true;
             }
         }
+        //System.out.println("Liberar cola = false");
         return false;
     }
 

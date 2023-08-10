@@ -11,12 +11,12 @@ public class Logger implements Runnable {
     private static Logger logger;
     private static final RdP rdp = new RdP();
 
-    public static Logger getInstanceOfLogger() {
+    public static Logger InstanceLogger() {
         synchronized (lock) {
             if(logger == null) {
                 try {
                     logger = new Logger();
-                    fileWriter = new FileWriter("Data/log.txt", false);
+                    fileWriter = new FileWriter("log.txt", false);
                 }catch (IOException e) {
                     e.printStackTrace();
                 }

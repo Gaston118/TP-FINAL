@@ -12,6 +12,9 @@ public class Transicion {
         estaEsperando = new Boolean[CANTIDAD_TRANSICIONES]; //ESTO SE UTILIZA PARA LA SEMANTICA TEMPORAL
     }
 
+
+    //------------------------------------POSIBLE ERROR-----------------------------------------------------
+
     public void setSensibilizado(Integer[] nuevaTS) {
         sensibilizada = nuevaTS;
     }
@@ -20,13 +23,11 @@ public class Transicion {
         return sensibilizada;
     }
 
-    public boolean esTransicionSensibilizada(int t, Integer[][] matrizIncidencia, Integer[] marcadoActual) {
-        for (int plaza = 0; plaza < matrizIncidencia.length; plaza++) {
-            if (matrizIncidencia[plaza][t] < 0 && marcadoActual[plaza] < Math.abs(matrizIncidencia[plaza][t])) {
-                return false; // La plaza de entrada no tiene suficientes tokens para disparar la transición.
-            }
+    public boolean esTransicionSensibilizada(Integer disparo) {
+        if(sensibilizada[disparo]>0){
+            return true;
         }
-        return true;
+        return false;
     }
 
 
