@@ -1,3 +1,5 @@
+import Procesamiento.*;
+import Recursos.Logger;
 import Recursos.Monitor;
 import Recursos.MyThreadFactory;
 
