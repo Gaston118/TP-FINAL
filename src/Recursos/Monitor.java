@@ -34,8 +34,8 @@ public class Monitor {
         }
     }
 
-    public void tomarMutex(){
-        try{
+    public void tomarMutex() {
+        try {
             Mutex.acquire();
             System.out.println(Thread.currentThread().getName() + " tomo el mutex");
             //esto significa que entro al monitor.
@@ -46,7 +46,7 @@ public class Monitor {
 
     public void liberarMutex() {
         boolean releasedMutex = false;
-        if(!LiberarCola()){
+        if (!LiberarCola()) {
             if (Mutex.availablePermits() != 0) {
                 System.out.println("Error en el mutex");
                 System.exit(1); //Si el semaforo deja de ser binario muere aca
@@ -61,11 +61,11 @@ public class Monitor {
     }
 
     //DISPARA Y POR LO TANTO EL ESTADO DE LA RED CAMBIA.
-    public void disparar(Integer transicion){
+    public void disparar(Integer transicion) {
         tomarMutex();
         boolean seDisparo = rdp.Disparar(transicion);
         liberarMutex();
-        if(!seDisparo){
+        if (!seDisparo) {
             try {
                 ColaCondition[transicion].acquire();
             } catch (Exception e) {
@@ -77,13 +77,13 @@ public class Monitor {
 
     //Devuelve los hilos que estan en las colas de condición y que tienen T sens
 
-    public Integer[] transiciones(){
+    public Integer[] transiciones() {
         Integer[] t = new Integer[CANTIDAD_TRANSICIONES];
-        for(int i=0; i<CANTIDAD_TRANSICIONES; i++){
-            if((ColaCondition[i].getQueueLength()!=0) && (rdp.getSens()[i]==1)){
-                t[i]=1;
-            }else{
-                t[i]=0;
+        for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
+            if ((ColaCondition[i].getQueueLength() != 0) && (rdp.getSens()[i] == 1)) {
+                t[i] = 1;
+            } else {
+                t[i] = 0;
             }
         }
         return t;
@@ -93,24 +93,25 @@ public class Monitor {
     para adquirir el semáforo. Devuelve false si no hay hilos en espera y, por lo tanto, el semáforo está
     disponible para ser adquirido sin poner ningún hilo en espera.
      */
-    /*La política de señalización "signal and exit" implica que, en lugar de liberar (disparar) aleatoriamente
-    una transición sensibilizada, se liberará la primera transición que esté sensibilizada y tenga hilos esperando
-    en su cola de condición.
-     */
-    public boolean LiberarCola() {
-        Integer[] Tposibles = transiciones();
 
-        for (int i = 0; i < Tposibles.length; i++) {
-            if (Tposibles[i] == 1 && ColaCondition[i].hasQueuedThreads()) {
-                ColaCondition[i].release();
-                //System.out.println("Liberar cola = true");
-                return true;
+    //PROVISORIAMENTE SE IMPLEMENTO ACA EL QUE ELIJA QUE TRANSICION DISPARAR.
+
+    public boolean LiberarCola() {
+        Integer[] transicionesSensibilizadas = transiciones();
+        Integer minimo = Integer.MAX_VALUE;
+        int posMin = 0;
+        for (int i = 1; i < CANTIDAD_TRANSICIONES; i++) {
+            if ((rdp.getDisparos()[i]< minimo) && (transicionesSensibilizadas[i] != 0)) {
+                minimo = rdp.getDisparos()[i];
+                posMin = i;
             }
         }
-        //System.out.println("Liberar cola = false");
+        if(ColaCondition[posMin].hasQueuedThreads()) {
+            ColaCondition[posMin].release();
+            return true;
+        }
         return false;
     }
-
 
 }
 
