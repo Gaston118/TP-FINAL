@@ -10,14 +10,15 @@ public class RdP {
     private int contador=0;
     private static Integer [][] MtzIncidencia;
     private static Integer [] Marcado;
-    private static Transicion Tsensibilizada;
     private Integer disparada;
+    private static Integer[] TsensA;
+    private Integer[] Disparos = new Integer[CANTIDAD_TRANSICIONES];
 
     public RdP(){
         MtzIncidencia = MATRIZ_INCIDENCIA;
         Marcado = MARCADO_INICIAL;
-        Integer[] TsensInicial = generarTransicion();
-        Tsensibilizada = new Transicion(TsensInicial);
+        TsensA = generarTransicion();
+        Arrays.fill(Disparos, 0);
     }
 
     /* ACA PODRIA HABER UN POSIBLE ERROR - TENER EN CUENTA */
@@ -39,9 +40,10 @@ public class RdP {
     }
 
   public Boolean Disparar(Integer disparo){
-        if(Tsensibilizada.esTransicionSensibilizada(disparo)){
+      if(TsensA[disparo]>=1){
             actualizarMarcado(disparo);
             actualizarT();
+            actualizarDisparos(disparo);
             if(disparo==14){
                 contador++;
                 System.out.println("Se completo un invariante.");
@@ -77,11 +79,11 @@ public class RdP {
   }
 
   public void setSens(Integer[] nuevaTS){
-        Tsensibilizada.setSensibilizado(nuevaTS);
+        TsensA=nuevaTS;
   }
 
   public Integer[] getSens(){
-      return Tsensibilizada.getSensibilizado();
+        return TsensA;
   }
 
   private static boolean cumpleIP(){
@@ -110,7 +112,13 @@ public class RdP {
         return disparada;
   }
 
+    public Integer[] getDisparos() {
+        return Disparos;
+    }
 
+    private void actualizarDisparos(Integer disparo) {
+        Disparos[disparo]++;
+    }
 
 
 }
