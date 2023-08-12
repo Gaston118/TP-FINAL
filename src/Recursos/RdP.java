@@ -7,7 +7,6 @@ import java.util.List;
 import static Recursos.Utilidades.*;
 
 public class RdP {
-    private int contador=0;
     private static Integer [][] MtzIncidencia;
     private static Integer [] Marcado;
     private Integer disparada;
@@ -44,10 +43,6 @@ public class RdP {
             actualizarMarcado(disparo);
             actualizarT();
             actualizarDisparos(disparo);
-            if(disparo==14){
-                contador++;
-                System.out.println("Se completo un invariante.");
-            }
             disparada=disparo;
             System.out.println("SE DISPARO");
             return true;
@@ -101,7 +96,7 @@ public class RdP {
   }
 
   public boolean Fin(){
-        if(contador==1){
+        if(getDisparos()[14]==1){
             System.out.println("Se ejecutaron 200 invariantes.");
             return true;
         }

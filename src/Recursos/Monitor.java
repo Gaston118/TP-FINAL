@@ -12,6 +12,7 @@ public class Monitor {
     private static Monitor monitor;
     private static Semaphore Mutex; // Cola de entrada
     private static Semaphore[] ColaCondition; // Representa una cola de condición asociada a cada transición.
+    private static Politica politica = new Politica();
 
     private Monitor() {
     }
@@ -98,16 +99,9 @@ public class Monitor {
 
     public boolean LiberarCola() {
         Integer[] transicionesSensibilizadas = transiciones();
-        Integer minimo = Integer.MAX_VALUE;
-        int posMin = 0;
-        for (int i = 1; i < CANTIDAD_TRANSICIONES; i++) {
-            if ((rdp.getDisparos()[i]< minimo) && (transicionesSensibilizadas[i] != 0)) {
-                minimo = rdp.getDisparos()[i];
-                posMin = i;
-            }
-        }
-        if(ColaCondition[posMin].hasQueuedThreads()) {
-            ColaCondition[posMin].release();
+        Integer d = politica.Politica_1(transicionesSensibilizadas);
+        if(ColaCondition[d].hasQueuedThreads()){
+            ColaCondition[d].release();
             return true;
         }
         return false;
