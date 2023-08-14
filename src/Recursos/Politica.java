@@ -8,16 +8,17 @@ public class Politica {
     }
 
     public Integer Politica_1(Integer[] t){
-        Integer minimo = Integer.MAX_VALUE;
-        int posMin = 0;
+        int minDisparos = Integer.MAX_VALUE;
+        int selectedTransition = 0;
 
-        for(int i=0; i<CANTIDAD_TRANSICIONES; i++){
-            if((rdp.getDisparos()[i]<minimo) && t[i]!=0){
-                minimo=rdp.getDisparos()[i];
-                posMin=i;
+        for (int i = 0; i < t.length; i++) {
+            if (t[i] == 1 && rdp.getDisparos()[i] < minDisparos) {
+                minDisparos = rdp.getDisparos()[i];
+                selectedTransition = i;
             }
-         }
-        return posMin;
+        }
+
+        return selectedTransition;
     }
 
 }

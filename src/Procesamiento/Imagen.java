@@ -5,7 +5,7 @@ import Recursos.RdP;
 
 public abstract class Imagen {
     public static final Monitor monitor = Monitor.InstanceMonitor();
-    private static final RdP rdp = new RdP();
+
     public Integer[] transiciones;
 
     public Imagen(){
@@ -17,10 +17,13 @@ public abstract class Imagen {
 
     public void procesar()
     {
-        while(!rdp.Fin()){
+        while(!monitor.finalizar()){
             for(Integer t : transiciones)
             {
-                monitor.disparar(t);
+                if(monitor.finalizar()){
+                    break;
+                }
+                monitor.dispararTransicion(t);
                 System.out.println("Se disparo T"+t);
             }
         }

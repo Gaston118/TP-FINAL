@@ -24,10 +24,8 @@ public class RdP {
     public static Integer[] generarTransicion(){
         Integer[] nuevaTS = new Integer[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
-        //convierto en 0, los punteros a transiciones NO sensibilizadas
-        for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {//busco por cada transición
-            for (int j = 0; j < CANTIDAD_PLAZAS; j++) { //si NO esta sensibilizada por sus plazas
-                //si al menos le falta un token no esta sensibilizada
+        for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
+            for (int j = 0; j < CANTIDAD_PLAZAS; j++) {
                 if ((MtzIncidencia[j][i] == -1) && (Marcado[j] < 1)) {
                     nuevaTS[i] = 0;
                     break;
@@ -44,10 +42,10 @@ public class RdP {
             actualizarT();
             actualizarDisparos(disparo);
             disparada=disparo;
-            System.out.println("SE DISPARO");
+            //System.out.println("SE DISPARO");
             return true;
         }
-        System.out.println("NO ESTABA SENS");
+        System.out.println("NO ESTABA SENS LA T"+disparo);
         actualizarT();
       return false;
   }
@@ -96,8 +94,7 @@ public class RdP {
   }
 
   public boolean Fin(){
-        if(getDisparos()[14]==1){
-            System.out.println("Se ejecutaron 200 invariantes.");
+        if(getDisparos()[14]>=200){
             return true;
         }
         return false;
