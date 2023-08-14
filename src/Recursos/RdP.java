@@ -95,6 +95,7 @@ public class RdP {
 
   public boolean Fin(){
         if(getDisparos()[14]>=200){
+            System.out.println("Finalizo el programa");
             return true;
         }
         return false;

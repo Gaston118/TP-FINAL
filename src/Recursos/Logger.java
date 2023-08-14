@@ -1,8 +1,13 @@
 package Recursos;
 
+import Procesamiento.Imagen;
+
+import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.Exchanger;
+
 
 public class Logger implements Runnable {
 
@@ -11,7 +16,12 @@ public class Logger implements Runnable {
     private static Logger logger;
     private static final RdP rdp = new RdP();
 
-    public static Logger InstanceLogger() {
+
+    public static final Exchanger<Integer> exchangerLogger = new Exchanger<>();
+
+    private Logger() { }
+
+    public static Logger getInstanceOfLogger() {
         synchronized (lock) {
             if(logger == null) {
                 try {
@@ -31,12 +41,13 @@ public class Logger implements Runnable {
     @Override
     public void run(){
         try {
-            while(!rdp.Fin()){
-                fileWriter.write("T" + rdp.seDisparo());
+            while(rdp.Fin()){
+                Integer disparos = exchangerLogger.exchange(null);
+                fileWriter.write("T" + disparos + "  ");
                 fileWriter.flush();
             }
             fileWriter.close();
-        }catch (IOException e) {
+        }catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

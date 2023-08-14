@@ -4,8 +4,15 @@ import Recursos.Monitor;
 import Recursos.MyThreadFactory;
 import Recursos.RdP;
 
+import java.util.concurrent.Exchanger;
+
 public class Main {
     private static final MyThreadFactory factory = MyThreadFactory.InstanceFactory();
+
+    public static final Logger logger = Logger.getInstanceOfLogger();
+
+    public static final RdP redPetri = new RdP();
+
 
     public static void main(String[] args) {
 
@@ -39,6 +46,9 @@ public class Main {
         Thread hilo6 = factory.newThread(Hilo_6);
         Thread hilo7 = factory.newThread(Hilo_7);
 
+        Thread log = factory.newThread(logger);
+        //log.start();
+
         hilo0.start();
         hilo1.start();
         hilo2.start();
@@ -57,10 +67,15 @@ public class Main {
             hilo5.join();
             hilo6.join();
             hilo7.join();
+
+           //log.join();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
         Hilo_0.mostrarTra();
     }
+
+
+
 }
