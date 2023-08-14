@@ -20,13 +20,14 @@ public abstract class Imagen {
         while(!monitor.finalizar()){
             for(Integer t : transiciones)
             {
-                if(monitor.finalizar()){
-                    break;
-                }
                 monitor.dispararTransicion(t);
                 System.out.println("Se disparo T"+t);
             }
         }
+    }
+
+    public void mostrarTra(){
+        monitor.mostrarT();
     }
 
 }

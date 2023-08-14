@@ -12,7 +12,7 @@ public class Monitor {
     private static Monitor monitor;
     private static Semaphore Mutex; // Cola de entrada
     private static Semaphore[] ColaCondition; // Representa una cola de condición asociada a cada transición.
-    private static Politica politica = new Politica();
+    private static final Politica politica = new Politica();
 
     private Monitor() {
     }
@@ -113,6 +113,10 @@ public class Monitor {
 
     public boolean finalizar(){
         return rdp.Fin();
+    }
+
+    public void mostrarT(){
+        rdp.mostrarDisparos();
     }
 
 }

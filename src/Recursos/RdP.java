@@ -112,6 +112,16 @@ public class RdP {
         Disparos[disparo]++;
     }
 
+    public void mostrarDisparos() {
+        System.out.println("--------------------------------------------------------------------------");
+        System.out.println("------------------- CANTIDAD DE TRANSICIONES -----------------------------");
+        System.out.println("--------------------------------------------------------------------------");
+
+        for (int i = 0; i < Disparos.length; i++) {
+            System.out.println("T" + i + ": " + Disparos[i]);
+        }
+    }
+
 
 }
 

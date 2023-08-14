@@ -2,9 +2,9 @@ import Procesamiento.*;
 import Recursos.Logger;
 import Recursos.Monitor;
 import Recursos.MyThreadFactory;
+import Recursos.RdP;
 
 public class Main {
-
     private static final MyThreadFactory factory = MyThreadFactory.InstanceFactory();
 
     public static void main(String[] args) {
@@ -48,5 +48,19 @@ public class Main {
         hilo6.start();
         hilo7.start();
 
+        try {
+            hilo0.join();
+            hilo1.join();
+            hilo2.join();
+            hilo3.join();
+            hilo4.join();
+            hilo5.join();
+            hilo6.join();
+            hilo7.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Hilo_0.mostrarTra();
     }
 }
