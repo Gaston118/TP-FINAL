@@ -4,12 +4,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static Recursos.RdP.seDisparo;
+
+
 public class Logger implements Runnable {
 
     private static final Object lock = new Object();
     private static FileWriter fileWriter;
     private static Logger logger;
-    private static final RdP rdp = new RdP();
+    public static boolean finalizar = false;
 
     public static Logger InstanceLogger() {
         synchronized (lock) {
@@ -29,14 +32,14 @@ public class Logger implements Runnable {
     }
 
     @Override
-    public void run(){
+    public void run() {
         try {
-            while(!rdp.Fin()){
-                fileWriter.write("T" + rdp.seDisparo());
+            while (!finalizar) {
+                fileWriter.write("T" + seDisparo());
                 fileWriter.flush();
             }
             fileWriter.close();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

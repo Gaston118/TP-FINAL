@@ -6,6 +6,7 @@ import Recursos.RdP;
 
 public class Main {
     private static final MyThreadFactory factory = MyThreadFactory.InstanceFactory();
+    private static final Logger logger = Logger.InstanceLogger();
 
     public static void main(String[] args) {
 
@@ -39,14 +40,21 @@ public class Main {
         Thread hilo6 = factory.newThread(Hilo_6);
         Thread hilo7 = factory.newThread(Hilo_7);
 
+        Thread hilo5_1 = factory.newThread(Hilo_5); //HILO PARA POLITICA 2
+
+        Thread logg = factory.newThread(logger);
+
         hilo0.start();
         hilo1.start();
         hilo2.start();
         hilo3.start();
         hilo4.start();
         hilo5.start();
+        hilo5_1.start();
         hilo6.start();
         hilo7.start();
+        logg.start();
+
 
         try {
             hilo0.join();
@@ -55,10 +63,13 @@ public class Main {
             hilo3.join();
             hilo4.join();
             hilo5.join();
+            hilo5_1.join();
             hilo6.join();
             hilo7.join();
+            logg.join();
+
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e + "ERROR EN LOS JOINS");
         }
 
         Hilo_0.mostrarTra();

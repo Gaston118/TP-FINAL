@@ -3,15 +3,17 @@ package Recursos;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Exchanger;
 
 import static Recursos.Utilidades.*;
 
 public class RdP {
     private static Integer [][] MtzIncidencia;
     private static Integer [] Marcado;
-    private Integer disparada;
+    private static Integer disparada;
     private static Integer[] TsensA;
     private Integer[] Disparos = new Integer[CANTIDAD_TRANSICIONES];
+
 
     public RdP(){
         MtzIncidencia = MATRIZ_INCIDENCIA;
@@ -38,7 +40,7 @@ public class RdP {
 
   public Boolean Disparar(Integer disparo){
       if(TsensA[disparo]>=1){
-            actualizarMarcado(disparo);
+          actualizarMarcado(disparo);
             actualizarT();
             actualizarDisparos(disparo);
             disparada=disparo;
@@ -95,13 +97,14 @@ public class RdP {
 
   public boolean Fin(){
         if(getDisparos()[14]>=200){
+            Logger.finalizar=true;
             return true;
         }
         return false;
   }
 
-  public Integer seDisparo(){
-        return disparada;
+  public static Integer seDisparo() {
+      return disparada;
   }
 
     public Integer[] getDisparos() {

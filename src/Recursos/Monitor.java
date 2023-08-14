@@ -38,7 +38,7 @@ public class Monitor {
     private void tomarMutex() {
         try {
             Mutex.acquire();
-            System.out.println(Thread.currentThread().getName() + " tomo el mutex");
+            //System.out.println(Thread.currentThread().getName() + " tomo el mutex");
             //esto significa que entro al monitor.
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -52,7 +52,7 @@ public class Monitor {
                 System.exit(1);
             }
             Mutex.release();
-            System.out.println(Thread.currentThread().getName() + " libero el mutex");
+            //System.out.println(Thread.currentThread().getName() + " libero el mutex");
         }
     }
     public void dispararTransicion(Integer t){
@@ -66,7 +66,7 @@ public class Monitor {
         liberarMutex();
         if (!seDisparo) {
             try {
-                System.out.println("VOY A COLA CONDICION");
+                //System.out.println("VOY A COLA CONDICION");
                 ColaCondition[transicion].acquire();
             } catch (Exception e) {
                 throw new RuntimeException(e + " Error en disparar de monitor");
@@ -102,10 +102,10 @@ public class Monitor {
 
     private boolean LiberarCola() {
         Integer[] transicionesSensibilizadas = transiciones();
-        Integer d = politica.Politica_1(transicionesSensibilizadas);
+        Integer d = politica.Politica_2(transicionesSensibilizadas);
         if(ColaCondition[d].hasQueuedThreads()){
             ColaCondition[d].release();
-            System.out.println("DESPIERTO A T"+d);
+            //System.out.println("DESPIERTO A T"+d);
             return true;
         }
         return false;
