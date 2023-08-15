@@ -17,11 +17,14 @@ public class Logger{
     }
 
     public static void logTransition(int transition) {
-        try {
-            fileWriter.write("T" + transition + " " + System.lineSeparator());
-            fileWriter.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Verificar si la transición no es T0
+        if (transition != 0) {
+            try {
+                fileWriter.write("T" + transition + " ");
+                fileWriter.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
