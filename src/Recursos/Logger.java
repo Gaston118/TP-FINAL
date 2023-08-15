@@ -2,41 +2,36 @@ package Recursos;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.concurrent.Exchanger;
 
-public class Logger implements Runnable {
-
-    private static final Object lock = new Object();
+public class Logger{
+    private static final String LOG_FILE = "transitions.txt";
     private static FileWriter fileWriter;
-    private static Logger logger;
-    private static final RdP rdp = new RdP();
 
-    public static Logger InstanceLogger() {
-        synchronized (lock) {
-            if(logger == null) {
-                try {
-                    logger = new Logger();
-                    fileWriter = new FileWriter("log.txt", false);
-                }catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                System.out.println("Ya se ha creado una instancia de un log.txt");
-            }
-            return logger;
+    static {
+        try {
+            fileWriter = new FileWriter(LOG_FILE);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    @Override
-    public void run(){
-        try {
-            while(!rdp.Fin()){
-                fileWriter.write("T" + rdp.seDisparo());
+    public static void logTransition(int transition) {
+        // Verificar si la transición no es T0
+        if (transition != 0) {
+            try {
+                fileWriter.write("T" + transition + " ");
                 fileWriter.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
+    }
+
+    public static void close() {
+        try {
             fileWriter.close();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

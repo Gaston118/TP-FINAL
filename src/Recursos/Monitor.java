@@ -12,7 +12,7 @@ public class Monitor {
     private static Monitor monitor;
     private static Semaphore Mutex; // Cola de entrada
     private static Semaphore[] ColaCondition; // Representa una cola de condición asociada a cada transición.
-    private static Politica politica = new Politica();
+    private static final Politica politica = new Politica();
 
     private Monitor() {
     }
@@ -35,10 +35,10 @@ public class Monitor {
         }
     }
 
-    public void tomarMutex() {
+    private void tomarMutex() {
         try {
             Mutex.acquire();
-            System.out.println(Thread.currentThread().getName() + " tomo el mutex");
+            //System.out.println(Thread.currentThread().getName() + " tomo el mutex");
             //esto significa que entro al monitor.
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -46,150 +46,77 @@ public class Monitor {
     }
 
     public void liberarMutex() {
-        boolean releasedMutex = false;
         if (!LiberarCola()) {
             if (Mutex.availablePermits() != 0) {
                 System.out.println("Error en el mutex");
-                System.exit(1); //Si el semaforo deja de ser binario muere aca
+                System.exit(1);
             }
             Mutex.release();
-            releasedMutex = true;
-            System.out.println(Thread.currentThread().getName() + " libero el mutex");
+            //System.out.println(Thread.currentThread().getName() + " libero el mutex");
         }
-        if (!releasedMutex) {
-            Mutex.release();
-        }
+    }
+    public void dispararTransicion(Integer t){
+        tomarMutex();
+        disparar(t);
     }
 
     //DISPARA Y POR LO TANTO EL ESTADO DE LA RED CAMBIA.
-    public void disparar(Integer transicion) {
-        tomarMutex();
+    private void disparar(Integer transicion) {
         boolean seDisparo = rdp.Disparar(transicion);
         liberarMutex();
         if (!seDisparo) {
             try {
+                //System.out.println("VOY A COLA CONDICION");
                 ColaCondition[transicion].acquire();
             } catch (Exception e) {
                 throw new RuntimeException(e + " Error en disparar de monitor");
             }
             disparar(transicion);
         }
+
     }
 
     //Devuelve los hilos que estan en las colas de condición y que tienen T sens
 
-    public Integer[] transiciones() {
+    private Integer[] transiciones() {
         Integer[] t = new Integer[CANTIDAD_TRANSICIONES];
+
         for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
             if ((ColaCondition[i].getQueueLength() != 0) && (rdp.getSens()[i] == 1)) {
-                t[i] = 1;
+                // Si la cola de condición para esta transición no está vacía y la transición está sensibilizada
+                t[i] = 1; // Marcar la transición como sensibilizada
             } else {
-                t[i] = 0;
+                t[i] = 0; // Marcar la transición como no sensibilizada
             }
         }
-        return t;
+
+        return t; // Devuelve el array que indica el estado de sensibilización de cada transición
     }
+
 
     /*El método hasQueuedThreads() de Semaphore devuelve true si hay hilos esperando en la cola de espera
     para adquirir el semáforo. Devuelve false si no hay hilos en espera y, por lo tanto, el semáforo está
     disponible para ser adquirido sin poner ningún hilo en espera.
      */
 
-    //PROVISORIAMENTE SE IMPLEMENTO ACA EL QUE ELIJA QUE TRANSICION DISPARAR.
 
-    public boolean LiberarCola() {
+    private boolean LiberarCola() {
         Integer[] transicionesSensibilizadas = transiciones();
-        Integer d = politica.Politica_1(transicionesSensibilizadas);
+        Integer d = politica.Politica_2(transicionesSensibilizadas);
         if(ColaCondition[d].hasQueuedThreads()){
             ColaCondition[d].release();
+            //System.out.println("DESPIERTO A T"+d);
             return true;
         }
         return false;
     }
 
+    public boolean finalizar(){
+        return rdp.Fin();
+    }
+
+    public void mostrarT(){
+        rdp.mostrarDisparos();
+    }
+
 }
-
-
-                                  /* OTRA IMPLEMENTACION */
-/***************************************************************************************************************************/
-/*import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-public class Monitor {
-    private static final RdP rdp = new RdP();
-    private final static Object lock = new Object();
-    private static Monitor monitor;
-    private static Lock mutexLock = new ReentrantLock();
-    private static boolean signaled = false;
-    private static Condition[] conditionArray;
-
-    private Monitor() {
-    }
-*/
-    /*
-    public static Monitor InstanceMonitor() {
-        synchronized (lock) {
-            if (monitor == null) {
-                monitor = new Monitor();
-                conditionArray = new Condition[CANTIDAD_TRANSICIONES];
-                for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
-                    conditionArray[i] = mutexLock.newCondition();
-                }
-            } else {
-                System.out.println("Ya existe una instancia de monitor");
-            }
-            return monitor;
-        }
-    }
-
-    public void tomarMutex(){
-        mutexLock.lock();
-        System.out.println(Thread.currentThread().getName() + " tomo el mutex");
-        // Aquí entra al monitor.
-    }
-
-    public void liberarMutex() {
-        System.out.println(Thread.currentThread().getName() + " libero el mutex");
-        signaled = true;
-        for (Condition condition : conditionArray) {
-            condition.signalAll();
-        }
-        mutexLock.unlock();
-    }
-
-    // DISPARA Y POR LO TANTO EL ESTADO DE LA RED CAMBIA.
-    public void disparar(Integer transicion){
-        tomarMutex();
-        boolean seDisparo = rdp.Disparar(transicion);
-        liberarMutex();
-        if (!seDisparo) {
-            try {
-                mutexLock.lock();
-                while (!signaled) {
-                    conditionArray[transicion].await();
-                }
-                signaled = false;
-                mutexLock.unlock();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e + " Error en disparar de monitor");
-            }
-        }
-    }
-
-    // Devuelve los hilos que están en las colas de condición y que tienen T sens.
-    public Integer[] transiciones(){
-        Integer[] t = new Integer[CANTIDAD_TRANSICIONES];
-        for(int i=0; i<CANTIDAD_TRANSICIONES; i++){
-            if((rdp.getSens()[i]==1)){
-                mutexLock.lock();
-                t[i] = conditionArray[i].hasWaiters() ? 1 : 0;
-                mutexLock.unlock();
-            } else {
-                t[i] = 0;
-            }
-        }
-        return t;
-    }
-}
-*/

@@ -3,15 +3,19 @@ package Recursos;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Exchanger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static Recursos.Utilidades.*;
 
 public class RdP {
     private static Integer [][] MtzIncidencia;
     private static Integer [] Marcado;
-    private Integer disparada;
+    private static Integer disparada;
     private static Integer[] TsensA;
     private Integer[] Disparos = new Integer[CANTIDAD_TRANSICIONES];
+
 
     public RdP(){
         MtzIncidencia = MATRIZ_INCIDENCIA;
@@ -24,10 +28,8 @@ public class RdP {
     public static Integer[] generarTransicion(){
         Integer[] nuevaTS = new Integer[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
-        //convierto en 0, los punteros a transiciones NO sensibilizadas
-        for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {//busco por cada transición
-            for (int j = 0; j < CANTIDAD_PLAZAS; j++) { //si NO esta sensibilizada por sus plazas
-                //si al menos le falta un token no esta sensibilizada
+        for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
+            for (int j = 0; j < CANTIDAD_PLAZAS; j++) {
                 if ((MtzIncidencia[j][i] == -1) && (Marcado[j] < 1)) {
                     nuevaTS[i] = 0;
                     break;
@@ -44,10 +46,11 @@ public class RdP {
             actualizarT();
             actualizarDisparos(disparo);
             disparada=disparo;
-            System.out.println("SE DISPARO");
+            Logger.logTransition(disparo);
+            //System.out.println("SE DISPARO");
             return true;
         }
-        System.out.println("NO ESTABA SENS");
+        System.out.println("NO ESTABA SENS LA T"+disparo);
         actualizarT();
       return false;
   }
@@ -96,15 +99,15 @@ public class RdP {
   }
 
   public boolean Fin(){
-        if(getDisparos()[14]==1){
-            System.out.println("Se ejecutaron 200 invariantes.");
+        if(getDisparos()[14]>=200){
+
             return true;
         }
         return false;
   }
 
-  public Integer seDisparo(){
-        return disparada;
+  public synchronized Integer seDisparo() {
+     return disparada;
   }
 
     public Integer[] getDisparos() {
@@ -113,6 +116,16 @@ public class RdP {
 
     private void actualizarDisparos(Integer disparo) {
         Disparos[disparo]++;
+    }
+
+    public void mostrarDisparos() {
+        System.out.println("--------------------------------------------------------------------------");
+        System.out.println("------------------- CANTIDAD DE TRANSICIONES -----------------------------");
+        System.out.println("--------------------------------------------------------------------------");
+
+        for (int i = 0; i < Disparos.length; i++) {
+            System.out.println("T" + i + ": " + Disparos[i]);
+        }
     }
 
 
