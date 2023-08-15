@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Exchanger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static Recursos.Utilidades.*;
 
@@ -40,10 +42,11 @@ public class RdP {
 
   public Boolean Disparar(Integer disparo){
       if(TsensA[disparo]>=1){
-          actualizarMarcado(disparo);
+            actualizarMarcado(disparo);
             actualizarT();
             actualizarDisparos(disparo);
             disparada=disparo;
+            Logger.logTransition(disparo);
             //System.out.println("SE DISPARO");
             return true;
         }
@@ -97,14 +100,14 @@ public class RdP {
 
   public boolean Fin(){
         if(getDisparos()[14]>=200){
-            Logger.finalizar=true;
+
             return true;
         }
         return false;
   }
 
-  public static Integer seDisparo() {
-      return disparada;
+  public synchronized Integer seDisparo() {
+     return disparada;
   }
 
     public Integer[] getDisparos() {

@@ -4,11 +4,12 @@ import Recursos.Monitor;
 import Recursos.MyThreadFactory;
 import Recursos.RdP;
 
+import java.util.concurrent.Exchanger;
+
 public class Main {
     private static final MyThreadFactory factory = MyThreadFactory.InstanceFactory();
-    private static final Logger logger = Logger.InstanceLogger();
-
     public static void main(String[] args) {
+
 
         Integer [] h1 = {1,3};
         Integer [] h2 = {2,4};
@@ -42,7 +43,6 @@ public class Main {
 
         Thread hilo5_1 = factory.newThread(Hilo_5); //HILO PARA POLITICA 2
 
-        Thread logg = factory.newThread(logger);
 
         hilo0.start();
         hilo1.start();
@@ -53,7 +53,6 @@ public class Main {
         hilo5_1.start();
         hilo6.start();
         hilo7.start();
-        logg.start();
 
 
         try {
@@ -66,12 +65,12 @@ public class Main {
             hilo5_1.join();
             hilo6.join();
             hilo7.join();
-            logg.join();
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e + "ERROR EN LOS JOINS");
         }
 
         Hilo_0.mostrarTra();
+        Logger.close();
     }
 }
