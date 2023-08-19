@@ -50,7 +50,7 @@ public class Main {
         hilo3.start();
         hilo4.start();
         hilo5.start();
-        hilo5_1.start();
+        //hilo5_1.start();
         hilo6.start();
         hilo7.start();
 
@@ -62,7 +62,7 @@ public class Main {
             hilo3.join();
             hilo4.join();
             hilo5.join();
-            hilo5_1.join();
+            //hilo5_1.join();
             hilo6.join();
             hilo7.join();
 
@@ -70,7 +70,8 @@ public class Main {
             throw new RuntimeException(e + "ERROR EN LOS JOINS");
         }
 
-        Hilo_0.mostrarTra();
-        Logger.close();
+        Hilo_0.mostrarT();
+        Hilo_0.mostrarM();
+
     }
 }

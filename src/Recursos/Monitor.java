@@ -1,6 +1,5 @@
 package Recursos;
 
-import java.util.Random;
 import java.util.concurrent.*;
 import static Recursos.Utilidades.*;
 
@@ -38,7 +37,7 @@ public class Monitor {
     private void tomarMutex() {
         try {
             Mutex.acquire();
-            //System.out.println(Thread.currentThread().getName() + " tomo el mutex");
+            System.out.println(Thread.currentThread().getName() + " tomo el mutex");
             //esto significa que entro al monitor.
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -46,14 +45,14 @@ public class Monitor {
     }
 
     public void liberarMutex() {
-        if (!LiberarCola()) {
-            if (Mutex.availablePermits() != 0) {
-                System.out.println("Error en el mutex");
-                System.exit(1);
+            if (!LiberarCola()) {
+                if (Mutex.availablePermits() != 0) {
+                    System.out.println("Error en el mutex");
+                    System.exit(1);
+                }
+                Mutex.release();
+                System.out.println(Thread.currentThread().getName() + " libero el mutex");
             }
-            Mutex.release();
-            //System.out.println(Thread.currentThread().getName() + " libero el mutex");
-        }
     }
     public void dispararTransicion(Integer t){
         tomarMutex();
@@ -64,14 +63,16 @@ public class Monitor {
     private void disparar(Integer transicion) {
         boolean seDisparo = rdp.Disparar(transicion);
         liberarMutex();
-        if (!seDisparo) {
+        if (!seDisparo && rdp.getDisparos()[14]<200) {
             try {
                 //System.out.println("VOY A COLA CONDICION");
                 ColaCondition[transicion].acquire();
             } catch (Exception e) {
                 throw new RuntimeException(e + " Error en disparar de monitor");
             }
-            disparar(transicion);
+            if(rdp.getDisparos()[14]<200) {
+                disparar(transicion);
+            }
         }
 
     }
@@ -102,7 +103,7 @@ public class Monitor {
 
     private boolean LiberarCola() {
         Integer[] transicionesSensibilizadas = transiciones();
-        Integer d = politica.Politica_2(transicionesSensibilizadas);
+        Integer d = politica.Politica_1(transicionesSensibilizadas);
         if(ColaCondition[d].hasQueuedThreads()){
             ColaCondition[d].release();
             //System.out.println("DESPIERTO A T"+d);
@@ -111,12 +112,34 @@ public class Monitor {
         return false;
     }
 
-    public boolean finalizar(){
-        return rdp.Fin();
+    public boolean finalizar() {
+        if (rdp.Fin()) {
+            Logger.close();
+
+            //LIBERA LOS RECURSOS
+
+            for (int i=0; i<CANTIDAD_TRANSICIONES; i++){
+                if(ColaCondition[i].hasQueuedThreads()){
+                    ColaCondition[i].release();
+                }
+            }
+
+            return true;
+        }
+        return false;
     }
 
-    public void mostrarT(){
+    public void mostrarTransiciones(){
         rdp.mostrarDisparos();
     }
+
+    public void mostrarMarcado(){
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("------------------------MARCADO FINAL------------------------------------------");
+        System.out.println("-------------------------------------------------------------------------------");
+        String marcado = rdp.printMarcado();
+        System.out.println(marcado);
+    }
+
 
 }

@@ -11,6 +11,6 @@ public class Crear extends Imagen implements Runnable {
 
     @Override
     public void run() {
-        procesar();
+            procesarT0();
     }
 }

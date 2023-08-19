@@ -2,11 +2,11 @@ package Procesamiento;
 
 import Recursos.Logger;
 import Recursos.Monitor;
-import Recursos.RdP;
 
 public abstract class Imagen {
     public static final Monitor monitor = Monitor.InstanceMonitor();
     public Integer[] transiciones;
+    private int contadorT0=0;
 
     public Imagen(){
     }
@@ -18,16 +18,32 @@ public abstract class Imagen {
     public void procesar()
     {
         while(!monitor.finalizar()){
-            for(Integer t : transiciones)
-            {
-                monitor.dispararTransicion(t);
-                System.out.println("T"+t);
+            for(Integer t : transiciones) {
+                if (!monitor.finalizar()) {
+                    monitor.dispararTransicion(t);
+                    //System.out.println("T" + t);
+                }
             }
         }
     }
 
-    public void mostrarTra(){
-        monitor.mostrarT();
+    public void procesarT0(){
+        while(contadorT0<200){
+            for(Integer t : transiciones)
+            {
+                monitor.dispararTransicion(t);
+                //System.out.println("T"+t);
+                contadorT0++;
+            }
+        }
+
+    }
+
+    public void mostrarT(){
+        monitor.mostrarTransiciones();
+    }
+    public void mostrarM(){
+         monitor.mostrarMarcado();
     }
 
 }

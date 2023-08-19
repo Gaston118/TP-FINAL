@@ -12,9 +12,8 @@ import static Recursos.Utilidades.*;
 public class RdP {
     private static Integer [][] MtzIncidencia;
     private static Integer [] Marcado;
-    private static Integer disparada;
     private static Integer[] TsensA;
-    private Integer[] Disparos = new Integer[CANTIDAD_TRANSICIONES];
+    private final Integer[] Disparos = new Integer[CANTIDAD_TRANSICIONES];
 
 
     public RdP(){
@@ -25,9 +24,9 @@ public class RdP {
     }
 
     /* ACA PODRIA HABER UN POSIBLE ERROR - TENER EN CUENTA */
+    //NOS DEVUELVE LAS TRANSICIONES SENS
     public static Integer[] generarTransicion(){
         Integer[] nuevaTS = new Integer[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-
         for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
             for (int j = 0; j < CANTIDAD_PLAZAS; j++) {
                 if ((MtzIncidencia[j][i] == -1) && (Marcado[j] < 1)) {
@@ -36,7 +35,6 @@ public class RdP {
                 }
             }
         }
-
         return nuevaTS;
     }
 
@@ -44,10 +42,9 @@ public class RdP {
       if(TsensA[disparo]>=1){
             actualizarMarcado(disparo);
             actualizarT();
-            actualizarDisparos(disparo);
-            disparada=disparo;
+            actualizarDisparos(disparo);;
+            System.out.println("T"+disparo);
             Logger.logTransition(disparo);
-            //System.out.println("SE DISPARO");
             return true;
         }
         System.out.println("NO ESTABA SENS LA T"+disparo);
@@ -84,6 +81,8 @@ public class RdP {
         return TsensA;
   }
 
+
+  //VERIFICA EL CUMPLIMIENTO DE LOS INVARIANTES DE PLAZA, SE UTILIZA DESPUES DE CADA DISPARO
   private static boolean cumpleIP(){
         boolean ip1,ip2,ip3,ip4,ip5,ip6,ip7,ip8;
         ip1= (Marcado[1]+Marcado[2]==1);
@@ -98,16 +97,13 @@ public class RdP {
         return (ip1 && ip2 && ip3 && ip4 && ip5 && ip6 && ip7 && ip8);
   }
 
+  //METODO PARA FINALIZAR LA EJECUCION (CUANDO T14 SE DISPARO 200 VECES SIGNIFICA QUE HUBO 200-IT)
   public boolean Fin(){
-        if(getDisparos()[14]>=200){
-
+        if(getDisparos()[14]==200){
+            //System.out.println("TRUE");
             return true;
         }
         return false;
-  }
-
-  public synchronized Integer seDisparo() {
-     return disparada;
   }
 
     public Integer[] getDisparos() {
@@ -126,6 +122,19 @@ public class RdP {
         for (int i = 0; i < Disparos.length; i++) {
             System.out.println("T" + i + ": " + Disparos[i]);
         }
+    }
+
+    public String printMarcado() {
+        StringBuilder texto = new StringBuilder();
+        texto.append("[");
+        for (int i = 0; i < Marcado.length; i++) {
+            texto.append(Marcado[i]);
+            if (i < Marcado.length - 1) {
+                texto.append(",");
+            }
+        }
+        texto.append("]\n");
+        return texto.toString();
     }
 
 
