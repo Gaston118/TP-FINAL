@@ -1,5 +1,7 @@
 package Recursos;
 
+import java.util.Random;
+
 import static Recursos.Utilidades.*;
 
 public class Politica {
@@ -20,5 +22,21 @@ public class Politica {
 
         return selectedTransition;
     }
+
+    //PRIORIZAR EL SEG IZQ EN LA ETAPA3 {T9, T11}
+    public Integer Politica_2(Integer[] t){
+
+        // Generar un número aleatorio entre 0 y 99
+        Random random = new Random();
+        if (random.nextInt(100) < 80) {
+            if (t[9] == 1) {
+                return 9;
+            } else if (t[11] == 1) {
+                return 11;
+            }
+        }
+        return Politica_1(t);
+    }
+
 
 }

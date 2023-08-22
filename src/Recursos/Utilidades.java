@@ -66,4 +66,7 @@ public class Utilidades {
     public static final Integer[] IT7 = {1,3,5,7,10,12,13,14};
     public static final Integer[] IT8 = {1,3,5,7,9,11,13,14};
 
+    //TRANSICIONES TEMPORIZADAS
+    public static final Integer[] TTemp =  {0, 3, 4, 7, 8, 11, 12, 14};
+
 }

@@ -62,5 +62,7 @@ public class Main {
         }
 
         Hilo_0.mostrarTra();
+        Hilo_0.mostrarM();
+        //Logger.close();
     }
 }

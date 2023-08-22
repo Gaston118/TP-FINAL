@@ -64,14 +64,16 @@ public class Monitor {
     private void disparar(Integer transicion) {
         boolean seDisparo = rdp.Disparar(transicion);
         liberarMutex();
-        if (!seDisparo) {
+        if (!seDisparo && !rdp.Fin()) {
             try {
                 System.out.println("VOY A COLA CONDICION");
                 ColaCondition[transicion].acquire();
             } catch (Exception e) {
                 throw new RuntimeException(e + " Error en disparar de monitor");
             }
-            disparar(transicion);
+            if (!rdp.Fin()) {
+                disparar(transicion);
+            }
         }
 
     }
@@ -112,11 +114,30 @@ public class Monitor {
     }
 
     public boolean finalizar(){
-        return rdp.Fin();
+        if(rdp.Fin()){
+            Logger.close();
+            for(int i=0; i<CANTIDAD_TRANSICIONES; i++){
+                if(ColaCondition[i].hasQueuedThreads()){
+                    ColaCondition[i].release();
+                    //System.out.println("DESPIERTO A T"+i);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public void mostrarT(){
         rdp.mostrarDisparos();
     }
+
+    public void mostrarMarcado(){
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("------------------------MARCADO FINAL------------------------------------------");
+        System.out.println("-------------------------------------------------------------------------------");
+        String marcado = rdp.printMarcado();
+        System.out.println(marcado);
+    }
+
 
 }
