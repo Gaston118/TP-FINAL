@@ -2,6 +2,8 @@ package Recursos;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.Exchanger;
 
 public class Logger{

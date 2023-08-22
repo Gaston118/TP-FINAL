@@ -3,24 +3,20 @@ package Recursos;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Exchanger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static Recursos.Utilidades.*;
 
 public class RdP {
     private static Integer [][] MtzIncidencia;
     private static Integer [] Marcado;
-    private static Integer disparada;
-    private static Integer[] TsensA;
+    private static Tiempo TsensA;
     private Integer[] Disparos = new Integer[CANTIDAD_TRANSICIONES];
-
 
     public RdP(){
         MtzIncidencia = MATRIZ_INCIDENCIA;
         Marcado = MARCADO_INICIAL;
-        TsensA = generarTransicion();
+        Integer [] TsensI = generarTransicion();
+        TsensA = new Tiempo(TsensI);
         Arrays.fill(Disparos, 0);
     }
 
@@ -41,17 +37,16 @@ public class RdP {
     }
 
   public Boolean Disparar(Integer disparo){
-      if(TsensA[disparo]>=1){
-            actualizarMarcado(disparo);
-            actualizarT();
-            actualizarDisparos(disparo);
-            disparada=disparo;
-            Logger.logTransition(disparo);
-            //System.out.println("SE DISPARO");
-            return true;
-        }
-        System.out.println("NO ESTABA SENS LA T"+disparo);
-        actualizarT();
+      if(TsensA.estaSensibilizado(disparo)) {
+          actualizarMarcado(disparo);
+          actualizarT();
+          actualizarDisparos(disparo);
+          Logger.logTransition(disparo);
+          System.out.println("T" + disparo);
+          return true;
+      }
+      System.out.println("NO ESTABA SENS LA T"+disparo);
+      actualizarT();
       return false;
   }
 
@@ -77,11 +72,11 @@ public class RdP {
   }
 
   public void setSens(Integer[] nuevaTS){
-        TsensA=nuevaTS;
+        TsensA.setSensibilizado(nuevaTS);
   }
 
   public Integer[] getSens(){
-        return TsensA;
+        return TsensA.getSensibilizada();
   }
 
   private static boolean cumpleIP(){
@@ -100,14 +95,9 @@ public class RdP {
 
   public boolean Fin(){
         if(getDisparos()[14]>=200){
-
             return true;
         }
         return false;
-  }
-
-  public synchronized Integer seDisparo() {
-     return disparada;
   }
 
     public Integer[] getDisparos() {
@@ -126,6 +116,19 @@ public class RdP {
         for (int i = 0; i < Disparos.length; i++) {
             System.out.println("T" + i + ": " + Disparos[i]);
         }
+    }
+
+    public String printMarcado() {
+        StringBuilder texto = new StringBuilder();
+        texto.append("[");
+        for (int i = 0; i < Marcado.length; i++) {
+            texto.append(Marcado[i]);
+            if (i < Marcado.length - 1) {
+                texto.append(",");
+            }
+        }
+        texto.append("]\n");
+        return texto.toString();
     }
 
 
