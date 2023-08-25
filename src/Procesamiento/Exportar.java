@@ -1,6 +1,6 @@
 package Procesamiento;
 
-public class Exportar extends Imagen implements Runnable{
+/*public class Exportar extends Imagen implements Runnable{
 
     public Exportar(Integer [] t){
         setTransiciones(t);
@@ -11,3 +11,4 @@ public class Exportar extends Imagen implements Runnable{
         procesar();
     }
 }
+*/

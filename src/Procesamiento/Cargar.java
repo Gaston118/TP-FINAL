@@ -1,6 +1,6 @@
 package Procesamiento;
 
-public class Cargar extends Imagen implements Runnable{
+/*public class Cargar extends Imagen implements Runnable{
 
     public Cargar(Integer [] t){
         setTransiciones(t);
@@ -11,3 +11,4 @@ public class Cargar extends Imagen implements Runnable{
         procesar();
     }
 }
+*/

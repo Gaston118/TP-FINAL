@@ -1,6 +1,6 @@
 package Procesamiento;
 
-public class Mejorar extends Imagen implements Runnable{
+/*public class Mejorar extends Imagen implements Runnable{
 
     public Mejorar(Integer [] t){
         setTransiciones(t);
@@ -11,3 +11,4 @@ public class Mejorar extends Imagen implements Runnable{
         procesar();
     }
 }
+*/

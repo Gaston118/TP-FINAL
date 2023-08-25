@@ -8,7 +8,6 @@ import static Recursos.Utilidades.*;
 
 public class Monitor {
     private static final RdP rdp = new RdP();
-    private final static Object lock = new Object();
     private static Monitor monitor;
     private static Semaphore Mutex; // Cola de entrada
     private static Semaphore[] ColaCondition; // Representa una cola de condición asociada a cada transición.
@@ -19,8 +18,7 @@ public class Monitor {
 
     /*ESTO LO HACEMOS PARA TENER SOLO UNA INSTANCIA DEL MONITOR, USANDO SINGLETON*/
 
-    public static Monitor InstanceMonitor() {
-        synchronized (lock) {
+    public synchronized static Monitor InstanceMonitor() {
             if (monitor == null) {
                 monitor = new Monitor();
                 Mutex = new Semaphore(1);
@@ -32,7 +30,6 @@ public class Monitor {
                 System.out.println("Ya existe una instancia de monitor");
             }
             return monitor;
-        }
     }
 
     private void tomarMutex() {
@@ -119,7 +116,6 @@ public class Monitor {
             for(int i=0; i<CANTIDAD_TRANSICIONES; i++){
                 if(ColaCondition[i].hasQueuedThreads()){
                     ColaCondition[i].release();
-                    //System.out.println("DESPIERTO A T"+i);
                 }
             }
             return true;
@@ -137,6 +133,10 @@ public class Monitor {
         System.out.println("-------------------------------------------------------------------------------");
         String marcado = rdp.printMarcado();
         System.out.println(marcado);
+    }
+
+    public Semaphore getMutex() {
+        return Mutex;
     }
 
 

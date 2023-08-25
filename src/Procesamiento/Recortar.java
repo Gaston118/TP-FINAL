@@ -1,6 +1,6 @@
 package Procesamiento;
 
-public class Recortar extends Imagen implements Runnable{
+/*public class Recortar extends Imagen implements Runnable{
 
     public Recortar(Integer[] t){
         setTransiciones(t);
@@ -12,3 +12,4 @@ public class Recortar extends Imagen implements Runnable{
         procesar();
     }
 }
+*/

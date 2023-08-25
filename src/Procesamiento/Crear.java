@@ -2,7 +2,7 @@ package Procesamiento;
 
 import Recursos.RdP;
 
-public class Crear extends Imagen implements Runnable {
+/*public class Crear extends Imagen implements Runnable {
 
     public Crear() {
         Integer[] t = new Integer[]{0};
@@ -13,4 +13,4 @@ public class Crear extends Imagen implements Runnable {
     public void run() {
         procesarT0();
     }
-}
+}*/
