@@ -1,20 +1,28 @@
 import Procesamiento.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Scanner;
 
+import Recursos.Monitor;
 import Recursos.MyThreadFactory;
 
 public class Main {
-
     public static void main(String[] args) {
         MyThreadFactory factory = new MyThreadFactory();
 
-        Integer [] h0 = {0};
-        Integer [] h1 = {1,3};
-        Integer [] h2 = {2,4};
-        Integer [] h3 = {5,7};
-        Integer [] h4 = {6,8};
-        Integer [] h5 = {9,11};
-        Integer [] h6 = {10,12};
-        Integer [] h7 = {13,14};
+        Monitor.selecPolitica();
+
+        long start = System.currentTimeMillis();
+        Instant Start = Instant.now();
+
+        Integer[] h0 = {0};
+        Integer[] h1 = {1, 3};
+        Integer[] h2 = {2, 4};
+        Integer[] h3 = {5, 7};
+        Integer[] h4 = {6, 8};
+        Integer[] h5 = {9, 11};
+        Integer[] h6 = {10, 12};
+        Integer[] h7 = {13, 14};
 
         Imagen Crear = new Imagen(h0);
 
@@ -38,7 +46,7 @@ public class Main {
         Thread hilo6 = factory.newThread(Recortar2);
         Thread hilo7 = factory.newThread(Exportar);
 
-        //Thread hilo5_1 = factory.newThread(Recortar);
+        Thread hilo5_1 = factory.newThread(Recortar);
 
         hilo0.start();
         hilo1.start();
@@ -48,8 +56,9 @@ public class Main {
         hilo5.start();
         hilo6.start();
         hilo7.start();
-
-        //hilo5_1.start();
+        if(Monitor.getEntradaUsuario()==2) {
+            hilo5_1.start();
+        }
 
         try {
             hilo0.join();
@@ -61,12 +70,20 @@ public class Main {
             hilo6.join();
             hilo7.join();
 
-            //hilo5_1.join();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
         Crear.mostrarTra();
         Crear.mostrarM();
+        long fin = System.currentTimeMillis();
+        Instant end = Instant.now();
+        Duration duration = Duration.between(Start, end);
+
+        long totalSeconds = duration.getSeconds();
+        long millis = duration.toMillis();
+
+        System.out.println("TIEMPO TOTAL: " + (fin - start) + " ms");
+        System.out.println("TIEMPO TOTAL: " + totalSeconds + "." + millis%1000 + " s");
+
     }
 }

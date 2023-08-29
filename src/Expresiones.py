@@ -44,6 +44,7 @@ if resultado.count != 0:
     print("\nSobrante:\n", resultado)
 
 
+
 #T1 T3 T6 T8 T10 T12 T13 T14
 #T1 T3 T6 T8 T9 T11 T13 T14
 #T1 T3 T5 T7 T10 T12 T13 T14

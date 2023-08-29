@@ -1,6 +1,7 @@
 package Recursos;
 
 import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.*;
 import static Recursos.Utilidades.*;
 
@@ -12,6 +13,7 @@ public class Monitor {
     private static Semaphore Mutex; // Cola de entrada
     private static Semaphore[] ColaCondition; // Representa una cola de condición asociada a cada transición.
     private static final Politica politica = new Politica();
+    private static int entradaUsuario;
 
     private Monitor() {
     }
@@ -45,7 +47,7 @@ public class Monitor {
     public void liberarMutex() {
         if (!LiberarCola()) {
             if (Mutex.availablePermits() != 0) {
-                System.out.println("Error en el mutex");
+                System.out.println("ERROR EN EL MUTEX");
                 System.exit(1);
             }
             Mutex.release();
@@ -63,10 +65,10 @@ public class Monitor {
         liberarMutex();
         if (!seDisparo && !rdp.Fin()) {
             try {
-                System.out.println("VOY A COLA CONDICION");
+                //System.out.println("VOY A COLA CONDICION");
                 ColaCondition[transicion].acquire();
             } catch (Exception e) {
-                throw new RuntimeException(e + " Error en disparar de monitor");
+                throw new RuntimeException(e + " ERROR EN DISPARAR DE MONITOR");
             }
             if (!rdp.Fin()) {
                 disparar(transicion);
@@ -101,10 +103,10 @@ public class Monitor {
 
     private boolean LiberarCola() {
         Integer[] transicionesSensibilizadas = transiciones();
-        Integer d = politica.Politica_1(transicionesSensibilizadas);
+        Integer d = politica.aplicarPolitica(transicionesSensibilizadas, getEntradaUsuario());
         if(ColaCondition[d].hasQueuedThreads()){
             ColaCondition[d].release();
-            System.out.println("DESPIERTO A T"+d);
+            System.out.println("Despierto a T"+d);
             return true;
         }
         return false;
@@ -139,5 +141,26 @@ public class Monitor {
         return Mutex;
     }
 
+    public static void selecPolitica(){
+        Scanner scanner = new Scanner(System.in);
+        int entrada;
+        while (true) {
+            System.out.print("Por favor, selecciona la politica: 1/2 ");
+            entrada = Integer.parseInt(scanner.nextLine());
+            if(entrada==1 || entrada==2){
+                break;
+            }
+            System.out.println("Politica no valida");
+        }
+        setEntradaUsuario(entrada);
+        scanner.close();
+    }
 
+    public static int getEntradaUsuario() {
+        return entradaUsuario;
+    }
+
+    private static void setEntradaUsuario(int entradaUsuario) {
+        Monitor.entradaUsuario = entradaUsuario;
+    }
 }

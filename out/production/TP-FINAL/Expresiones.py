@@ -43,16 +43,6 @@ print("\n", contador,"\n")
 if resultado.count != 0:
     print("\nSobrante:\n", resultado)
 
-total_occurrences = 0
-
-for sequence in ALL_IT:
-    sequence_str = " ".join([f"T{num}" for num in sequence])
-    sequence_pattern = r"\s+".join([f"(T{num}\\s.*?)" for num in sequence])
-    occurrences = len(re.findall(sequence_pattern, mensaje))
-    total_occurrences += occurrences
-    print(f"[{sequence_str}] = {occurrences} veces.")
-
-print("\nTotal:", total_occurrences)
 
 
 #T1 T3 T6 T8 T10 T12 T13 T14

@@ -47,7 +47,7 @@ public class RdP {
           System.out.println("T" + disparo);
           return true;
       }
-      System.out.println("NO ESTABA SENS LA T"+disparo);
+      System.out.println("T"+disparo + " no sensibilizada");
       actualizarT();
       return false;
   }
@@ -59,7 +59,7 @@ public class RdP {
         try{
             Marcado = sumarVectores(Marcado, productoMatricial(MtzIncidencia,disparar));
         } catch (IndexOutOfBoundsException e) {
-            throw new RuntimeException(e + "Error de disparo");
+            throw new RuntimeException(e + "ERROR EN ACTUALIZAR MARCADO");
         }
       if(!cumpleIP()){
           System.out.println("FALLA EN LOS INVARIANTES DE PLAZA");
@@ -70,8 +70,8 @@ public class RdP {
   //Actualizar Transiciones
   public void actualizarT(){
         Integer[] nuevaT = generarTransicion();
-        setSens(nuevaT);
         setTimeStamp(nuevaT);
+        setSens(nuevaT);
   }
 
   public void setSens(Integer[] nuevaTS){
@@ -104,10 +104,7 @@ public class RdP {
   }
 
   public boolean Fin(){
-        if(getDisparos()[14]>=200){
-            return true;
-        }
-        return false;
+      return getDisparos()[14] >= 200;
   }
 
     public Integer[] getDisparos() {
@@ -141,15 +138,13 @@ public class RdP {
     }
 
     public static void setTimeStamp(Integer[] nuevaT){
-        for(int i = 0; i < CANTIDAD_TRANSICIONES; i++){
-            //VERIFICA QUE NO SEA EL MISMO
-            if(!nuevaT[i].equals(TsensA.getSensibilizada()[i])){
+        for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
+            if (!nuevaT[i].equals(TsensA.getSensibilizada()[i])) {
+                System.out.println("Cambio el timeStamp de T" + i);
                 timeStamp[i] = System.currentTimeMillis();
             }
         }
     }
-
-
 
 
 }

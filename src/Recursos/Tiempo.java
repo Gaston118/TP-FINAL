@@ -28,7 +28,7 @@ public class Tiempo {
     public boolean estaSensibilizado(Integer disparo){
         if(sensibilizada[disparo]>=1){
             if(!esTemporizada(disparo)){
-                System.out.println("No es temp");
+                //System.out.println("No es temporizada");
                 return true;
             }
             return testVentanaTiempo(disparo);
@@ -48,12 +48,13 @@ public class Tiempo {
     private boolean testVentanaTiempo(Integer disparo) {
         Long[] timeStamp = RdP.getTimestamp();
         long tiempoAct = System.currentTimeMillis();
+        int a = alfa[disparo];
         long tiempoMin = timeStamp[disparo] + alfa[disparo];
         boolean antesDeAlfa = (tiempoAct - timeStamp[disparo]) < alfa[disparo];
         if ((tiempoAct - timeStamp[disparo] >= alfa[disparo]) && (tiempoAct - timeStamp[disparo] < beta[disparo])) {
             return true;
         }
-        antesDeLaVentana(antesDeAlfa, tiempoAct, tiempoMin);
+        antesDeLaVentana(antesDeAlfa, tiempoAct, tiempoMin, disparo);
         //SI SALGO DE DORMIR Y ESTA SENS
         if(sensibilizada[disparo]>=1){
             return true;
@@ -66,16 +67,16 @@ public class Tiempo {
     private void setTiempos(){
         for(int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
             if (esTemporizada(i)){
-                alfa[i] = 100;
+                alfa[i] = 10;
                 beta[i] = 10000000;
             }
         }
     }
 
     //SI ESTA ANTES DEL ALFA, DEJA EL MUTEX Y SE VA A DORMIR
-    private void antesDeLaVentana(boolean antesA, long tiempoAct, long tiempoMin) {
+    private void antesDeLaVentana(boolean antesA, long tiempoAct, long tiempoMin, Integer disparo) {
         if (antesA) {
-            System.out.println("ME VOY A DORMIR");
+            System.out.println("T" + disparo + " se va a dormir");
             Imagen.monitor.liberarMutex();
             long aDormir = tiempoMin - tiempoAct;
             try {
