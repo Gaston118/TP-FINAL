@@ -18,39 +18,51 @@ public class Imagen implements Runnable {
     public void run() {
         if (transiciones.length == 1 && transiciones[0] == 0) {
             procesarT0();
-        } else {
+        }
+        else if(Monitor.getEntradaUsuario()==2){
+            procesarP2();
+        }
+        else {
             procesar();
         }
     }
 
-    public void procesar() {
+    private void procesar() {
         while (!monitor.finalizar()) {
             for (Integer t : transiciones) {
                 if (!monitor.finalizar()) {
                     monitor.dispararTransicion(t);
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void procesarT0() {
+        while (contadorT0 < 200) {
+            for (Integer t : transiciones) {
+                monitor.dispararTransicion(t);
+                contadorT0++;
+            }
+        }
+    }
+
+    private void procesarP2() {
+        while (!monitor.finalizar()) {
+            for (Integer t : transiciones) {
+                if (!monitor.finalizar()) {
+                    monitor.dispararTransicion(t);
+                    if (t == 9 || t == 11) {  // Verifica si es la transición t9 o t11
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(10); //ALFA <= SLEEP PARA POLITICA 2
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         }
     }
 
-    public void procesarT0() {
-        while (contadorT0 < 200) {
-            for (Integer t : transiciones) {
-                monitor.dispararTransicion(t);
-                contadorT0++;
-                try {
-                    TimeUnit.MILLISECONDS.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     public void mostrarTra() {
         monitor.mostrarT();
