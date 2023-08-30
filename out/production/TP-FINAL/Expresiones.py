@@ -25,24 +25,22 @@ ALL_IT = [
 ]
 position_counters = [0] * len(ALL_IT)
 
-patron = r"((((T1 )(.*?)(T3 )(.*?)((((T5 )(.*?)(T7 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?)))|(((T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?)))))|((T2 )(.*?)(T4 )(.*?)((((T5 )(.*?)(T7 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?)))|(((T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?))))))(T13 )(.*?)(T14 )(.*?))"
+patron = r"((T1 )(.*?)(T3 )(.*?)|(T2 )(.*?)(T4 )(.*?))((T5 )(.*?)(T7 )(.*?)|(T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?))(T13 )(.*?)(T14 )"
 resultado = mensaje
 
 while True:
     resultado_anterior = resultado
 
-    resultado = re.sub(patron, r'\g<5>\g<7>\g<12>\g<14>\g<17>\g<19>\g<21>\g<23>\g<27>\g<29>\g<32>\g<34>\g<36>\g<38>\g<41>\g<43>\g<48>\g<50>\g<53>\g<55>\g<57>\g<59>\g<63>\g<65>\g<68>\g<70>\g<72>\g<74>\g<76>\g<78>', resultado)
+    resultado = re.sub(patron, r'\g<3>\g<5>\g<7>\g<9>\g<12>\g<14>\g<16>\g<18>\g<21>\g<23>\g<25>\g<27>\g<29>', resultado)
 
     if(resultado == resultado_anterior): break
 
     print(resultado)
 
-
 print("\n", contador,"\n")
 
 if resultado.count != 0:
     print("\nSobrante:\n", resultado)
-
 
 
 #T1 T3 T6 T8 T10 T12 T13 T14

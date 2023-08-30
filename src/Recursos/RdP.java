@@ -9,13 +9,14 @@ public class RdP {
     private static Integer [][] MtzIncidencia;
     public static Integer [] Marcado;
     private static Tiempo TsensA;
-    private Integer[] Disparos = new Integer[CANTIDAD_TRANSICIONES];
+    private final Integer[] Disparos;
     private static Long[] timeStamp;
 
     public RdP(){
         MtzIncidencia = MATRIZ_INCIDENCIA;
         Marcado = MARCADO_INICIAL;
-        Integer [] TsensI = generarTransicion();
+        Disparos = new Integer[CANTIDAD_TRANSICIONES];
+        Integer [] TsensI = TransicionSens();
         TsensA = new Tiempo(TsensI);
         Arrays.fill(Disparos, 0);
         timeStamp = new Long[CANTIDAD_TRANSICIONES];
@@ -24,12 +25,13 @@ public class RdP {
         }
     }
 
-    public static Integer[] generarTransicion(){
+    public static Integer[] TransicionSens(){
         Integer[] nuevaTS = new Integer[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-
-        for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
-            for (int j = 0; j < CANTIDAD_PLAZAS; j++) {
-                if ((MtzIncidencia[j][i] == -1) && (Marcado[j] < 1)) {
+        //HAHO 0 LAS T NO SENS
+        for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) { //BUSCO POR T
+            for (int j = 0; j < CANTIDAD_PLAZAS; j++) { //BUSCO POR P
+                //MtzIncidencia[j][i] == -1 DE ENTRADA CONSUME TOKENS
+                if ((MtzIncidencia[j][i] == -1) && (Marcado[j] < 1)) { //SI LE FALTA AL MENOS 1 TOKEN
                     nuevaTS[i] = 0;
                     break;
                 }
@@ -69,7 +71,7 @@ public class RdP {
 
   //Actualizar Transiciones
   public void actualizarT(){
-        Integer[] nuevaT = generarTransicion();
+        Integer[] nuevaT = TransicionSens();
         setTimeStamp(nuevaT);
         setSens(nuevaT);
   }

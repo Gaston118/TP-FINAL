@@ -77,7 +77,8 @@ public class Monitor {
 
     }
 
-    //Devuelve los hilos que estan en las colas de condición y que tienen T sens
+    //asQueuedThreads() verifica si hay hilos en espera en la cola del sincronizador específico y devuelve un booleano.
+    //getQueueLength() devuelve la cantidad de hilos en espera en la cola del sincronizador específico como un número entero.
 
     private Integer[] transiciones() {
         Integer[] t = new Integer[CANTIDAD_TRANSICIONES];
@@ -93,12 +94,6 @@ public class Monitor {
 
         return t; // Devuelve el array que indica el estado de sensibilización de cada transición
     }
-
-
-    /*El método hasQueuedThreads() de Semaphore devuelve true si hay hilos esperando en la cola de espera
-    para adquirir el semáforo. Devuelve false si no hay hilos en espera y, por lo tanto, el semáforo está
-    disponible para ser adquirido sin poner ningún hilo en espera.
-     */
 
 
     private boolean LiberarCola() {

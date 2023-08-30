@@ -14,16 +14,16 @@ public class Politica {
 
     private Integer Politica_1(Integer[] t){
         int minDisparos = Integer.MAX_VALUE;
-        int selectedTransition = 0;
+        int selecTransition = 0;
 
         for (int i = 0; i < t.length; i++) {
             if (t[i] == 1 && rdp.getDisparos()[i] < minDisparos) {
                 minDisparos = rdp.getDisparos()[i];
-                selectedTransition = i;
+                selecTransition = i;
             }
         }
 
-        return selectedTransition;
+        return selecTransition;
     }
 
     //PRIORIZAR EL SEG IZQ EN LA ETAPA3 {T9, T11}

@@ -8,12 +8,18 @@ public class Tiempo {
     private static Integer[] alfa;
     private static Integer[] beta;
     private static Integer[] sensibilizada;
+    public static Boolean[] Esperando;
 
     public Tiempo(Integer[] transiciones){
         alfa = new Integer[CANTIDAD_TRANSICIONES];
         beta = new Integer[CANTIDAD_TRANSICIONES];
+        Esperando = new Boolean[CANTIDAD_TRANSICIONES];
         sensibilizada = transiciones;
         setTiempos();
+        for(int i=0; i<CANTIDAD_TRANSICIONES; i++)
+        {
+            Esperando[i]=false;
+        }
     }
 
     private boolean esTemporizada(Integer disparo){
@@ -26,7 +32,7 @@ public class Tiempo {
     }
 
     public boolean estaSensibilizado(Integer disparo){
-        if(sensibilizada[disparo]>=1){
+        if(sensibilizada[disparo]>=1 && !Esperando[disparo]){
             if(!esTemporizada(disparo)){
                 //System.out.println("No es temporizada");
                 return true;
@@ -76,12 +82,14 @@ public class Tiempo {
     //SI ESTA ANTES DEL ALFA, DEJA EL MUTEX Y SE VA A DORMIR
     private void antesDeLaVentana(boolean antesA, long tiempoAct, long tiempoMin, Integer disparo) {
         if (antesA) {
+            Esperando[disparo]=true;
             System.out.println("T" + disparo + " se va a dormir");
             Imagen.monitor.liberarMutex();
             long aDormir = tiempoMin - tiempoAct;
             try {
                 Thread.sleep(aDormir);
                 Imagen.monitor.getMutex().acquire();
+                Esperando[disparo]=false;
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
