@@ -136,20 +136,29 @@ public class Monitor {
         return Mutex;
     }
 
-    public static void selecPolitica(){
+    public static void selecPolitica() {
         Scanner scanner = new Scanner(System.in);
         int entrada;
+
         while (true) {
-            System.out.print("Por favor, selecciona la politica: 1/2 ");
-            entrada = Integer.parseInt(scanner.nextLine());
-            if(entrada==1 || entrada==2){
-                break;
+            try {
+                System.out.print("Por favor, selecciona la politica: 1/2 ");
+                entrada = Integer.parseInt(scanner.nextLine());
+
+                if (entrada == 1 || entrada == 2) {
+                    setEntradaUsuario(entrada);
+                    break;
+                } else {
+                    System.out.println("Politica no valida");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada no valida. Por favor, ingresa un número entero.");
             }
-            System.out.println("Politica no valida");
         }
-        setEntradaUsuario(entrada);
-        scanner.close();
+
+        //scanner.close();
     }
+
 
     public static int getEntradaUsuario() {
         return entradaUsuario;

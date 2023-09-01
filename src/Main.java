@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import Recursos.Monitor;
 import Recursos.MyThreadFactory;
+import Recursos.Tiempo;
 
 public class Main {
     public static void main(String[] args) {
@@ -83,7 +84,7 @@ public class Main {
         long millis = duration.toMillis();
 
         System.out.println("TIEMPO TOTAL: " + (fin - start) + " ms");
-        System.out.println("TIEMPO TOTAL: " + totalSeconds + "." + millis%1000 + " s");
+        System.out.println("TIEMPO TOTAL: " + totalSeconds + "," + millis%1000 + " s");
 
     }
 }

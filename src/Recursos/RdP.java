@@ -27,7 +27,7 @@ public class RdP {
 
     public static Integer[] TransicionSens(){
         Integer[] nuevaTS = new Integer[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        //HAHO 0 LAS T NO SENS
+        //HAGO 0 LAS T NO SENS
         for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) { //BUSCO POR T
             for (int j = 0; j < CANTIDAD_PLAZAS; j++) { //BUSCO POR P
                 //MtzIncidencia[j][i] == -1 DE ENTRADA CONSUME TOKENS

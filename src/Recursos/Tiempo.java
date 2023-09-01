@@ -2,6 +2,8 @@ package Recursos;
 
 import Procesamiento.Imagen;
 
+import java.util.Scanner;
+
 import static Recursos.Utilidades.*;
 
 public class Tiempo {
@@ -78,6 +80,9 @@ public class Tiempo {
             }
         }
     }
+    public static Integer getTiempo(Integer d){
+        return alfa[d];
+    }
 
     //SI ESTA ANTES DEL ALFA, DEJA EL MUTEX Y SE VA A DORMIR
     private void antesDeLaVentana(boolean antesA, long tiempoAct, long tiempoMin, Integer disparo) {
@@ -95,5 +100,6 @@ public class Tiempo {
             }
         }
     }
+
 
 }

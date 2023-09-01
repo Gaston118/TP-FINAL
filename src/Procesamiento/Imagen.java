@@ -1,6 +1,7 @@
 package Procesamiento;
 
 import Recursos.Monitor;
+import Recursos.Tiempo;
 
 import java.util.concurrent.TimeUnit;
 
@@ -51,9 +52,9 @@ public class Imagen implements Runnable {
             for (Integer t : transiciones) {
                 if (!monitor.finalizar()) {
                     monitor.dispararTransicion(t);
-                    if (t == 9 || t == 11) {  // Verifica si es la transición t9 o t11
+                    if (t == 11) {  // Verifica si es la transición t11
                         try {
-                            TimeUnit.MILLISECONDS.sleep(10); //ALFA <= SLEEP PARA POLITICA 2
+                            TimeUnit.MILLISECONDS.sleep(Tiempo.getTiempo(11)); //ALFA <= SLEEP PARA POLITICA 2
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
