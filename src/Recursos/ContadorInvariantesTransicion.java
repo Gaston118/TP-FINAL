@@ -16,7 +16,7 @@ public class ContadorInvariantesTransicion {
 
             Map<String, Integer> contadorInvariantes = new HashMap<>();                     // mapa para almacenar el conteo de cada invariante
             
-            // expresioon regular 
+            // expresioon regular MAL, ESTA MAL 
             Pattern patron = Pattern.compile("((T1 )(.*?)(T3 )(.*?)|(T2 )(.*?)(T4 )(.*?))((T5 )(.*?)(T7 )(.*?)|(T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?))(T13 )(.*?)(T14 )");
 
             while ((line = reader.readLine()) != null) {  // mientras haya una linea para leer, leo
@@ -32,6 +32,7 @@ public class ContadorInvariantesTransicion {
                         }
                     }
                 }
+                System.out.println("Invariante no encontrada ");
             }
             reader.close();
               // imprimo
