@@ -20,19 +20,21 @@ public class ContadorInvariantesTransicion {
             Pattern patron = Pattern.compile("((T1 )(.*?)(T3 )(.*?)|(T2 )(.*?)(T4 )(.*?))((T5 )(.*?)(T7 )(.*?)|(T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?))(T13 )(.*?)(T14 )");
 
             while ((line = reader.readLine()) != null) {  // mientras haya una linea para leer, leo
-                Matcher matcher = patron.matcher(line);
-                while (matcher.find()) {
+                Matcher matcher = patron.matcher(line);   // busco la expresion regular en la linea leida
+                while (matcher.find()) {                  //si encuentro un match
+                     // El grupo 1 en la expresión regular coincide con el invariante IT1, el grupo 2 con IT2, y así sucesivamente
                     for (int i = 1; i <= 8; i++) {
-                        String invariante = matcher.group(i * 4 - 3);
-                        if (invariante != null) {
-                            contadorInvariantes.putIfAbsent("IT" + i, 0);
-                            contadorInvariantes.put("IT" + i, contadorInvariantes.get("IT" + i) + 1);
+                        String invariante = matcher.group(i * 4 - 3);  //obtengo el invariante correspondiente al grupo de captura i en la expresión regular
+                                                                        // cada invariante se encuentra en el grupo de captura (Tn ) en la expresión regular
+                        if (invariante != null) {                      //Verifico si encontre un invariante en el grupo de captura
+                            contadorInvariantes.putIfAbsent("IT" + i, 0); // si el invariante no existe en el mapa, lo agrego con valor 0
+                            contadorInvariantes.put("IT" + i, contadorInvariantes.get("IT" + i) + 1);  // incremento el valor del invariante en 1
                         }
                     }
                 }
             }
             reader.close();
-
+              // imprimo
             for (Map.Entry<String, Integer> entry : contadorInvariantes.entrySet()) {
                 System.out.println("Invariante " + entry.getKey() + " se cumplió " + entry.getValue() + " veces.");
             }
