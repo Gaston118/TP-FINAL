@@ -20,9 +20,6 @@ public class Imagen implements Runnable {
         if (transiciones.length == 1 && transiciones[0] == 0) {
             procesarT0();
         }
-        else if(Monitor.getEntradaUsuario()==2){
-            procesarP2();
-        }
         else {
             procesar();
         }
@@ -47,29 +44,8 @@ public class Imagen implements Runnable {
         }
     }
 
-    private void procesarP2() {
-        while (!monitor.finalizar()) {
-            for (Integer t : transiciones) {
-                if (!monitor.finalizar()) {
-                    monitor.dispararTransicion(t);
-                    if (t == 11) {  // Verifica si es la transición t11
-                        try {
-                            TimeUnit.MILLISECONDS.sleep(Tiempo.getTiempo(11)); //ALFA <= SLEEP PARA POLITICA 2
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
     public void mostrarTra() {
         monitor.mostrarT();
     }
 
-    public void mostrarM() {
-        monitor.mostrarMarcado();
-    }
 }

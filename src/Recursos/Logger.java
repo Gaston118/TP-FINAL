@@ -19,8 +19,7 @@ public class Logger{
     }
 
     public static void logTransition(int transition) {
-        // Verificar si la transición no es T0
-        if (transition != 0) {
+        if(transition!=0) {
             try {
                 fileWriter.write("T" + transition + " ");
                 fileWriter.flush();

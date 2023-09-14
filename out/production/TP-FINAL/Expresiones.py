@@ -5,49 +5,58 @@ mensaje = f.read()
 print(mensaje)
 f.close()
 
-transiciones = mensaje.split()
-contador = {"T1": 0, "T2": 0, "T3": 0, "T4": 0,
-            "T5": 0, "T6": 0, "T7": 0, "T8": 0, "T9": 0, "T10": 0,
-            "T11": 0, "T12": 0, "T13": 0, "T14": 0}
+transiciones = re.findall(r'T\d+', mensaje)
 
+contador = {}
 for transicion in transiciones:
-    contador[transicion] += 1
+    if transicion in contador:
+        contador[transicion] += 1
+    else:
+        contador[transicion] = 1
 
-ALL_IT = [
-    [2, 4, 6, 8, 10, 12, 13, 14],
-    [2, 4, 6, 8, 9, 11, 13, 14],
-    [2, 4, 5, 7, 10, 12, 13, 14],
-    [2, 4, 5, 7, 9, 11, 13, 14],
-    [1, 3, 6, 8, 10, 12, 13, 14],
-    [1, 3, 6, 8, 9, 11, 13, 14],
-    [1, 3, 5, 7, 10, 12, 13, 14],
-    [1, 3, 5, 7, 9, 11, 13, 14]
-]
-position_counters = [0] * len(ALL_IT)
 
-patron = r"((T1 )(.*?)(T3 )(.*?)|(T2 )(.*?)(T4 )(.*?))((T5 )(.*?)(T7 )(.*?)|(T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?))(T13 )(.*?)(T14 )"
+patron = "((T1 )(.*?)(T3 )(.*?)|(T2 )(.*?)(T4 )(.*?))((T5 )(.*?)(T7 )(.*?)|(T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?))(T13 )(.*?)(T14 )"
 resultado = mensaje
+
+reemplazo_count = 0
+
 
 while True:
     resultado_anterior = resultado
+
+    coincidencia = re.search(patron, resultado)
+    if coincidencia:
+        parte_eliminada = coincidencia.group()
 
     resultado = re.sub(patron, r'\g<3>\g<5>\g<7>\g<9>\g<12>\g<14>\g<16>\g<18>\g<21>\g<23>\g<25>\g<27>\g<29>', resultado)
 
     if(resultado == resultado_anterior): break
 
+    reemplazo_count += 1
+
+    print(f"\nIteración {reemplazo_count} - Parte eliminada:\n{parte_eliminada}\n")
+
     print(resultado)
 
-print("\n", contador,"\n")
+
+print("\nContador de transiciones:")
+for transicion, count in contador.items():
+    print(f"{transicion}: {count}")
 
 if resultado.count != 0:
     print("\nSobrante:\n", resultado)
 
+print("Contador de reemplazos:", reemplazo_count)
 
-#T1 T3 T6 T8 T10 T12 T13 T14
-#T1 T3 T6 T8 T9 T11 T13 T14
-#T1 T3 T5 T7 T10 T12 T13 T14
-#T1 T3 T5 T7 T9 T11 T13 T14
-#T2 T4 T6 T8 T10 T12 T13 T14
-#T2 T4 T6 T8 T9 T11 T13 T14
-#T2 T4 T5 T7 T10 T12 T13 T14
-#T2 T4 T5 T7 T9 T11 T13 T14
+
+#\g<3>\g<6>\g<8>\g<11>\g<14>\g<16>\g<19>\g<22>\g<24>\g<26>
+#((T1)(.*?)(T3)|(T2)(.*?)(T4))(.*?)((T5)(.*?)(T7)|(T6)(.*?)(T8))(.*?)((T9)(.*?)(T11)|(T10)(.*?)(T12))(.*?)(T13)(.*?)(T14)
+
+#r'\g<2>\g<5>\g<9>\g<11>\g<14>\g<17>\g<19>\g<22>\g<25>\g<27>\g<29>\g<31>'
+#patron = "(T0)(.*?)((T1)(.*?)((T3))|(T2)(.*?)(T4))(.*?)((T5)(.*?)(T7)|(T6)(.*?)(T8))(.*?)((T9)(.*?)(T11)|(T10)(.*?)(T12))(.*?)(T13)(.*?)(T14)(.*?)"
+
+#\g<2>\g<4>\g<6>\g<8>\g<10>\g<12>\g<14>\g<16>
+#(T1 |T2 )(.*?)(T3 |T4 )(.*?)(T5 |T6 )(.*?)(T7 |T8 )(.*?)(T9 |T10 )(.*?)(T11 |T12 )(.*?)(T13 )(.*?)(T14 )(.*?)
+
+#\g<3>\g<5>\g<7>\g<9>\g<12>\g<14>\g<16>\g<18>\g<21>\g<23>\g<25>\g<27>\g<29>
+#((T1 )(.*?)(T3 )(.*?)|(T2 )(.*?)(T4 )(.*?))((T5 )(.*?)(T7 )(.*?)|(T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?))(T13 )(.*?)(T14 )

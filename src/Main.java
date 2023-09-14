@@ -1,11 +1,10 @@
 import Procesamiento.*;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Scanner;
 
 import Recursos.Monitor;
 import Recursos.MyThreadFactory;
-import Recursos.Tiempo;
+import Recursos.RdP;
 
 public class Main {
     public static void main(String[] args) {
@@ -57,7 +56,7 @@ public class Main {
         hilo5.start();
         hilo6.start();
         hilo7.start();
-        if(Monitor.getEntradaUsuario()==2) {
+        if (Monitor.getEntradaUsuario() == 2) {
             hilo5_1.start();
         }
 
@@ -75,7 +74,7 @@ public class Main {
             throw new RuntimeException(e);
         }
         Crear.mostrarTra();
-        Crear.mostrarM();
+
         long fin = System.currentTimeMillis();
         Instant end = Instant.now();
         Duration duration = Duration.between(Start, end);
@@ -84,7 +83,6 @@ public class Main {
         long millis = duration.toMillis();
 
         System.out.println("TIEMPO TOTAL: " + (fin - start) + " ms");
-        System.out.println("TIEMPO TOTAL: " + totalSeconds + "," + millis%1000 + " s");
-
+        System.out.println("TIEMPO TOTAL: " + totalSeconds + "," + millis % 1000 + " s \n");
     }
 }

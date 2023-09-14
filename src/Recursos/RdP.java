@@ -1,7 +1,6 @@
 package Recursos;
 
-import java.util.Arrays;
-import java.util.StringJoiner;
+import java.util.*;
 
 import static Recursos.Utilidades.*;
 
@@ -13,7 +12,7 @@ public class RdP {
     private static Long[] timeStamp;
 
     public RdP(){
-        MtzIncidencia = MATRIZ_INCIDENCIA;
+        MtzIncidencia = getMatriz();
         Marcado = MARCADO_INICIAL;
         Disparos = new Integer[CANTIDAD_TRANSICIONES];
         Integer [] TsensI = TransicionSens();
@@ -47,6 +46,7 @@ public class RdP {
           actualizarDisparos(disparo);
           Logger.logTransition(disparo);
           System.out.println("T" + disparo);
+
           return true;
       }
       System.out.println("T"+disparo + " no sensibilizada");
@@ -118,6 +118,7 @@ public class RdP {
     }
 
     public void mostrarDisparos() {
+        System.out.println();
         System.out.println("--------------------------------------------------------------------------");
         System.out.println("------------------- CANTIDAD DE TRANSICIONES -----------------------------");
         System.out.println("--------------------------------------------------------------------------");
@@ -125,6 +126,7 @@ public class RdP {
         for (int i = 0; i < Disparos.length; i++) {
             System.out.println("T" + i + ": " + Disparos[i]);
         }
+        System.out.println();
     }
 
     public String printMarcado() {
@@ -148,6 +150,45 @@ public class RdP {
         }
     }
 
+    public void getIT() {
+        Integer[] resultado = new Integer[IT.length];
+        Integer[] copiaD = Arrays.copyOf(getDisparos(), getDisparos().length);
+        Arrays.fill(resultado, 0);
+
+        while (copiaD[14]>0) {
+
+            for (int secuenciaIndex = 0; secuenciaIndex < IT.length; secuenciaIndex++) {
+
+                Integer[] secuenciaActual = IT[secuenciaIndex];
+                boolean completo = true;
+
+                for (Integer transicion : secuenciaActual) {
+                    if (copiaD[transicion] == 0) {
+                       completo=false;
+                    }
+                }
+                if (completo) {
+                    for (Integer t : secuenciaActual) {
+                        copiaD[t]--;
+                    }
+                    resultado[secuenciaIndex]++;
+                }
+            }
+        }
+
+            for (int i = 0; i < resultado.length; i++) {
+                System.out.println("IT(" + (i + 1) + "): " + Arrays.toString(IT[i]) + " = " + resultado[i]);
+            }
+            System.out.println();
+
+        int sumaTotal = 0;
+        for (Integer valor : resultado) {
+            sumaTotal += valor;
+        }
+
+        System.out.println("TOTAL IT'S: " + sumaTotal);
+        System.out.println();
+    }
 
 }
 

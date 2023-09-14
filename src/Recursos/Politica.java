@@ -31,11 +31,19 @@ public class Politica {
 
         // Generar un número aleatorio entre 0 y 99
         Random random = new Random();
-        if (random.nextInt(100) < 80) {
+        int aleatorio = random.nextInt(100);
+        if (aleatorio < 75) {
             if (t[9] >= 1) {
                 return 9;
             } else if (t[11] >= 1) {
                 return 11;
+            }
+        }
+        else if(aleatorio>75){
+            if (t[10] >= 1) {
+                return 10;
+            } else if (t[12] >= 1) {
+                return 12;
             }
         }
         return Politica_1(t);

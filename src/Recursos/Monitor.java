@@ -77,14 +77,14 @@ public class Monitor {
 
     }
 
-    //asQueuedThreads() verifica si hay hilos en espera en la cola del sincronizador específico y devuelve un booleano.
+    //hasQueuedThreads() verifica si hay hilos en espera en la cola del sincronizador específico y devuelve un booleano.
     //getQueueLength() devuelve la cantidad de hilos en espera en la cola del sincronizador específico como un número entero.
 
     private Integer[] transiciones() {
         Integer[] t = new Integer[CANTIDAD_TRANSICIONES];
 
         for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
-            if ((ColaCondition[i].getQueueLength() != 0) && (rdp.getSens()[i] == 1)) {
+            if ((ColaCondition[i].hasQueuedThreads()) && (rdp.getSens()[i] == 1)) {
                 // Si la cola de condición para esta transición no está vacía y la transición está sensibilizada
                 t[i] = 1; // Marcar la transición como sensibilizada
             } else {
@@ -122,14 +122,16 @@ public class Monitor {
 
     public void mostrarT(){
         rdp.mostrarDisparos();
-    }
-
-    public void mostrarMarcado(){
         System.out.println("-------------------------------------------------------------------------------");
-        System.out.println("------------------------MARCADO FINAL------------------------------------------");
+        System.out.println("------------------------ MARCADO FINAL ----------------------------------------");
         System.out.println("-------------------------------------------------------------------------------");
         String marcado = rdp.printMarcado();
         System.out.println(marcado);
+
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("------------------------ INVARIANTES ------------------------------------------");
+        System.out.println("-------------------------------------------------------------------------------");
+        rdp.getIT();
     }
 
     public Semaphore getMutex() {
@@ -156,7 +158,7 @@ public class Monitor {
             }
         }
 
-        //scanner.close();
+        scanner.close();
     }
 
 
