@@ -1,6 +1,5 @@
 package Recursos;
 
-import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.*;
 import static Recursos.Utilidades.*;
@@ -107,7 +106,7 @@ public class Monitor {
         return false;
     }
 
-    public boolean finalizar(){
+    public boolean finalizer(){
         if(rdp.Fin()){
             Logger.close();
             for(int i=0; i<CANTIDAD_TRANSICIONES; i++){

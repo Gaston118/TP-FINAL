@@ -10,7 +10,7 @@ public class Tiempo {
     private static Integer[] alfa;
     private static Integer[] beta;
     private static Integer[] sensibilizada;
-    public static Boolean[] Esperando;
+    private static Boolean[] Esperando;
 
     public Tiempo(Integer[] transiciones){
         alfa = new Integer[CANTIDAD_TRANSICIONES];

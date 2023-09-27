@@ -1,9 +1,6 @@
 package Procesamiento;
 
 import Recursos.Monitor;
-import Recursos.Tiempo;
-
-import java.util.concurrent.TimeUnit;
 
 
 public class Imagen implements Runnable {
@@ -26,9 +23,9 @@ public class Imagen implements Runnable {
     }
 
     private void procesar() {
-        while (!monitor.finalizar()) {
+        while (!monitor.finalizer()) {
             for (Integer t : transiciones) {
-                if (!monitor.finalizar()) {
+                if (!monitor.finalizer()) {
                     monitor.dispararTransicion(t);
                 }
             }

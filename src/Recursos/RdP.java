@@ -29,7 +29,7 @@ public class RdP {
         //HAGO 0 LAS T NO SENS
         for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) { //BUSCO POR T
             for (int j = 0; j < CANTIDAD_PLAZAS; j++) { //BUSCO POR P
-                //MtzIncidencia[j][i] == -1 DE ENTRADA CONSUME TOKENS
+                //MtzIncidencia[j][i] == -1 DE ENTRADA : CONSUME TOKENS
                 if ((MtzIncidencia[j][i] == -1) && (Marcado[j] < 1)) { //SI LE FALTA AL MENOS 1 TOKEN
                     nuevaTS[i] = 0;
                     break;
