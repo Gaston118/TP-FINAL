@@ -2,39 +2,40 @@ import re
 
 f = open("../transitions.txt", "r")
 mensaje = f.read()
-print("\n", mensaje)
+print(mensaje)
 f.close()
 
-EXPRESION = mensaje
+transiciones = re.findall(r'T\d+', mensaje)
 
-transiciones = EXPRESION.split()
-contador = {"T1": 0, "T2": 0, "T3": 0, "T4": 0,
-            "T5": 0, "T6": 0, "T7": 0, "T8": 0, "T9": 0, "T10": 0,
-            "T11": 0, "T12": 0, "T13": 0, "T14": 0}
-
+contador = {}
 for transicion in transiciones:
-    contador[transicion] += 1
+    if transicion in contador:
+        contador[transicion] += 1
+    else:
+        contador[transicion] = 1
 
-patron = r"((((T1 )(.*?)(T3 )(.*?)((((T5 )(.*?)(T7 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?)))|(((T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?)))))|((T2 )(.*?)(T4 )(.*?)((((T5 )(.*?)(T7 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?)))|(((T6 )(.*?)(T8 )(.*?))((T9 )(.*?)(T11 )(.*?)|(T10 )(.*?)(T12 )(.*?))))))(T13 )(.*?)(T14 )(.*?))"
-resultado = EXPRESION
-condicion = True
+
+patron = "((T1 )(.*?)(T3 )|(T2 )(.*?)(T4 ))(.*?)((T5 )(.*?)(T7 )|(T6 )(.*?)(T8 ))(.*?)((T9 )(.*?)(T11 )|(T10 )(.*?)(T12 ))(.*?)(T13 )(.*?)((T14 )|(T14))"
+resultado = mensaje
+
+numero=0
 
 while True:
-    nuevoResultado = re.sub(patron, r'\g<5>\g<7>\g<12>\g<14>\g<17>\g<19>\g<21>\g<23>\g<27>\g<29>\g<32>\g<34>\g<36>\g<38>\g<41>\g<43>\g<48>\g<50>\g<53>\g<55>\g<57>\g<59>\g<63>\g<65>\g<68>\g<70>\g<72>\g<74>\g<76>\g<78>', resultado)
-    if(nuevoResultado == resultado ): break
-    resultado = nuevoResultado
     print(resultado)
 
+    nuevo_resultado, sustituciones = re.subn(patron, r'\g<3>\g<6>\g<8>\g<11>\g<14>\g<16>\g<19>\g<22>\g<24>\g<26>', resultado)
 
-print("\n", contador)
+    if(nuevo_resultado == resultado): break
+
+    resultado=nuevo_resultado
+
+    numero+=sustituciones
+
+print("\nContador de transiciones:")
+for transicion, count in contador.items():
+    print(f"{transicion}: {count}")
+
 if resultado.count != 0:
-    print("\nSobrante:\n", resultado)
+    print("\nSobrante:", resultado)
 
-#T1 T3 T6 T8 T10 T12 T13 T14
-#T1 T3 T6 T8 T9 T11 T13 T14
-#T1 T3 T5 T7 T10 T12 T13 T14
-#T1 T3 T5 T7 T9 T11 T13 T14
-#T2 T4 T6 T8 T10 T12 T13 T14
-#T2 T4 T6 T8 T9 T11 T13 T14
-#T2 T4 T5 T7 T10 T12 T13 T14
-#T2 T4 T5 T7 T9 T11 T13 T14
+print("\nCantidad de sustituciones:", numero)

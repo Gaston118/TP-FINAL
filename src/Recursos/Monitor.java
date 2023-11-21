@@ -1,6 +1,6 @@
 package Recursos;
 
-import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.*;
 import static Recursos.Utilidades.*;
 
@@ -8,19 +8,18 @@ import static Recursos.Utilidades.*;
 
 public class Monitor {
     private static final RdP rdp = new RdP();
-    private final static Object lock = new Object();
     private static Monitor monitor;
     private static Semaphore Mutex; // Cola de entrada
     private static Semaphore[] ColaCondition; // Representa una cola de condición asociada a cada transición.
     private static final Politica politica = new Politica();
+    private static int entradaUsuario;
 
     private Monitor() {
     }
 
     /*ESTO LO HACEMOS PARA TENER SOLO UNA INSTANCIA DEL MONITOR, USANDO SINGLETON*/
 
-    public static Monitor InstanceMonitor() {
-        synchronized (lock) {
+    public synchronized static Monitor InstanceMonitor() {
             if (monitor == null) {
                 monitor = new Monitor();
                 Mutex = new Semaphore(1);
@@ -32,7 +31,6 @@ public class Monitor {
                 System.out.println("Ya existe una instancia de monitor");
             }
             return monitor;
-        }
     }
 
     private void tomarMutex() {
@@ -48,13 +46,16 @@ public class Monitor {
     public void liberarMutex() {
         if (!LiberarCola()) {
             if (Mutex.availablePermits() != 0) {
-                System.out.println("Error en el mutex");
+                //significa que hay más de un permiso disponible
+                //lo que generalmente indica que el semáforo ha dejado de ser binario.
+                System.out.println("ERROR EN EL MUTEX");
                 System.exit(1);
             }
             Mutex.release();
             System.out.println(Thread.currentThread().getName() + " libero el mutex");
         }
     }
+
     public void dispararTransicion(Integer t){
         tomarMutex();
         disparar(t);
@@ -66,10 +67,10 @@ public class Monitor {
         liberarMutex();
         if (!seDisparo && !rdp.Fin()) {
             try {
-                System.out.println("VOY A COLA CONDICION");
+                //System.out.println("VOY A COLA CONDICION");
                 ColaCondition[transicion].acquire();
             } catch (Exception e) {
-                throw new RuntimeException(e + " Error en disparar de monitor");
+                throw new RuntimeException(e + " ERROR EN DISPARAR DE MONITOR");
             }
             if (!rdp.Fin()) {
                 disparar(transicion);
@@ -78,13 +79,14 @@ public class Monitor {
 
     }
 
-    //Devuelve los hilos que estan en las colas de condición y que tienen T sens
+    //hasQueuedThreads() verifica si hay hilos en espera en la cola del sincronizador específico y devuelve un booleano.
+    //getQueueLength() devuelve la cantidad de hilos en espera en la cola del sincronizador específico como un número entero.
 
     private Integer[] transiciones() {
         Integer[] t = new Integer[CANTIDAD_TRANSICIONES];
 
         for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
-            if ((ColaCondition[i].getQueueLength() != 0) && (rdp.getSens()[i] == 1)) {
+            if ((ColaCondition[i].hasQueuedThreads()) && (rdp.getSens()[i] >= 1)) {
                 // Si la cola de condición para esta transición no está vacía y la transición está sensibilizada
                 t[i] = 1; // Marcar la transición como sensibilizada
             } else {
@@ -96,30 +98,26 @@ public class Monitor {
     }
 
 
-    /*El método hasQueuedThreads() de Semaphore devuelve true si hay hilos esperando en la cola de espera
-    para adquirir el semáforo. Devuelve false si no hay hilos en espera y, por lo tanto, el semáforo está
-    disponible para ser adquirido sin poner ningún hilo en espera.
-     */
-
-
     private boolean LiberarCola() {
         Integer[] transicionesSensibilizadas = transiciones();
-        Integer d = politica.Politica_1(transicionesSensibilizadas);
+        Integer d = politica.aplicarPolitica(transicionesSensibilizadas, getEntradaUsuario());
         if(ColaCondition[d].hasQueuedThreads()){
             ColaCondition[d].release();
-            System.out.println("DESPIERTO A T"+d);
+            System.out.println("Despierto a T"+d);
             return true;
         }
         return false;
     }
 
-    public boolean finalizar(){
+    //SI transicionesSensibilizadas ES 0 ES DECIR NO HAY T SENS, LA POLITICA DEVUELVE 0 Y NUNCA VA A HABER UN HILO
+    //ESPERANDO POR T0 ENTONCES LIBERARCOLA DEUELVE FALSE.
+
+    public boolean finalizer(){
         if(rdp.Fin()){
             Logger.close();
             for(int i=0; i<CANTIDAD_TRANSICIONES; i++){
                 if(ColaCondition[i].hasQueuedThreads()){
                     ColaCondition[i].release();
-                    //System.out.println("DESPIERTO A T"+i);
                 }
             }
             return true;
@@ -129,15 +127,51 @@ public class Monitor {
 
     public void mostrarT(){
         rdp.mostrarDisparos();
-    }
-
-    public void mostrarMarcado(){
         System.out.println("-------------------------------------------------------------------------------");
-        System.out.println("------------------------MARCADO FINAL------------------------------------------");
+        System.out.println("------------------------ MARCADO FINAL ----------------------------------------");
         System.out.println("-------------------------------------------------------------------------------");
         String marcado = rdp.printMarcado();
         System.out.println(marcado);
+
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("------------------------ INVARIANTES ------------------------------------------");
+        System.out.println("-------------------------------------------------------------------------------");
+        rdp.getIT();
+    }
+
+    public Semaphore getMutex() {
+        return Mutex;
+    }
+
+    public static void selecPolitica() {
+        Scanner scanner = new Scanner(System.in);
+        int entrada;
+
+        while (true) {
+            try {
+                System.out.print("Por favor, selecciona la politica: 1/2 ");
+                entrada = Integer.parseInt(scanner.nextLine());
+
+                if (entrada == 1 || entrada == 2) {
+                    setEntradaUsuario(entrada);
+                    break;
+                } else {
+                    System.out.println("Politica no valida");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada no valida. Por favor, ingresa un número entero.");
+            }
+        }
+
+        scanner.close();
     }
 
 
+    public static int getEntradaUsuario() {
+        return entradaUsuario;
+    }
+
+    private static void setEntradaUsuario(int entradaUsuario) {
+        Monitor.entradaUsuario = entradaUsuario;
+    }
 }
