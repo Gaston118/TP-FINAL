@@ -46,6 +46,8 @@ public class Monitor {
     public void liberarMutex() {
         if (!LiberarCola()) {
             if (Mutex.availablePermits() != 0) {
+                //significa que hay más de un permiso disponible
+                //lo que generalmente indica que el semáforo ha dejado de ser binario.
                 System.out.println("ERROR EN EL MUTEX");
                 System.exit(1);
             }
@@ -53,6 +55,7 @@ public class Monitor {
             System.out.println(Thread.currentThread().getName() + " libero el mutex");
         }
     }
+
     public void dispararTransicion(Integer t){
         tomarMutex();
         disparar(t);
@@ -83,7 +86,7 @@ public class Monitor {
         Integer[] t = new Integer[CANTIDAD_TRANSICIONES];
 
         for (int i = 0; i < CANTIDAD_TRANSICIONES; i++) {
-            if ((ColaCondition[i].hasQueuedThreads()) && (rdp.getSens()[i] == 1)) {
+            if ((ColaCondition[i].hasQueuedThreads()) && (rdp.getSens()[i] >= 1)) {
                 // Si la cola de condición para esta transición no está vacía y la transición está sensibilizada
                 t[i] = 1; // Marcar la transición como sensibilizada
             } else {
@@ -105,6 +108,9 @@ public class Monitor {
         }
         return false;
     }
+
+    //SI transicionesSensibilizadas ES 0 ES DECIR NO HAY T SENS, LA POLITICA DEVUELVE 0 Y NUNCA VA A HABER UN HILO
+    //ESPERANDO POR T0 ENTONCES LIBERARCOLA DEUELVE FALSE.
 
     public boolean finalizer(){
         if(rdp.Fin()){
