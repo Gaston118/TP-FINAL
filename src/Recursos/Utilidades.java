@@ -7,10 +7,9 @@ import java.io.IOException;
 public class Utilidades {
     private Utilidades() {}
 
-    //Calcula el producto punto pero solo para los valores de plazas y transiciones definidos
     public static Integer[] productoMatricial(Integer[][] matriz, Integer[] vector) {
         Integer[] productoMatricial = new Integer[CANTIDAD_PLAZAS];
-        //plazas filas de la matriz, transiciones columnas
+
         for (int i = 0; i < CANTIDAD_PLAZAS; i++) {
             int aux = 0;
             for (int j = 0; j < CANTIDAD_TRANSICIONES; j++) {
@@ -22,14 +21,13 @@ public class Utilidades {
     }
 
 
-    //Suma vectorial
     public static Integer[] sumarVectores(Integer[] vector1, Integer[] vector2) {
-        Integer[] resultante = new Integer[CANTIDAD_PLAZAS];
+        Integer[] resultado = new Integer[CANTIDAD_PLAZAS];
         for (int i = 0; i < CANTIDAD_PLAZAS; i++) {
-            resultante[i] = vector1[i] + vector2[i];
+            resultado[i] = vector1[i] + vector2[i];
         }
 
-        return resultante;
+        return resultado;
     }
 
     public static Integer[][] getMatriz(){
