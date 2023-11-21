@@ -11,11 +11,11 @@ public class Utilidades {
         Integer[] productoMatricial = new Integer[CANTIDAD_PLAZAS];
 
         for (int i = 0; i < CANTIDAD_PLAZAS; i++) {
-            int aux = 0;
+            int a = 0;
             for (int j = 0; j < CANTIDAD_TRANSICIONES; j++) {
-                aux += matriz[i][j] * vector[j];
+                a += matriz[i][j] * vector[j];
             }
-            productoMatricial[i] = aux;
+            productoMatricial[i] = a;
         }
         return productoMatricial;
     }
